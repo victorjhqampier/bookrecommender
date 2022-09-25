@@ -1,0 +1,18 @@
+python -m venv env
+Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope CurrentUser
+env/Scripts/activate.ps1
+python -m pip install --upgrade pip
+
+#Generate o install
+#pip freeze > requirements.txt
+pip install -r requirements.txt
+
+#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
+#addd postgrese libraris https://www.codevoila.com/post/2/python3-connect-postgresql-with-psycopg2-on-ubuntu
+#sudo apt-get install libpq-dev
+
+#https://www.freecodecamp.org/news/how-to-dockerize-a-flask-app/
+#https://minikube.sigs.k8s.io/docs/start/
+#https://flask-sqlalchemy.palletsprojects.com/en/2.x/models/
+docker build -t apilcencias .
+docker run -p 5000:5000 --name dev-apilicencias -d apilcencias
