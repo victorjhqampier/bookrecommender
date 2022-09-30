@@ -1,6 +1,7 @@
 import re
 from unicodedata import normalize
-class HelperCommon:
+from Domain.Interfaces.IHelper import IHelper
+class HelperCommon(IHelper):
     __Words=["a","con","de","al","e","en", "ademas","tal","sus","el","entre","sido","asi","desde","ella","ello","del","es","estas","esto","han","estos","esta","este","ha","pe","com","como","he","la","las","los","les","mas","mi","me","muy","no","o","para","por","que","se","si","son","su","tu","un","una","y","ya","yo","tus","tu","te","lo"]
     
     def __init__(self):
