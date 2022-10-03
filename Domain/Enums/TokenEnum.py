@@ -1,4 +1,4 @@
 from enum import Enum
 class TokenEnum(str, Enum):
-    TokenKey:str = 'state1'
-    TokenValid:str = 'state2'
+    Key:str = 'ax57b64cce2a36d8ad4c56b6102401357cf18542b4117ca598006a1e0b03049e97'
+    Expire:str = '1'

@@ -28,7 +28,7 @@ class HelperCommon(IHelper):
             if not (x in self.__Words):
                 arrTemp.append(''.join(char for char in x if char.isalnum()))
         cString = " ".join(arrTemp)        
-        return " ".join(arrTemp.split())
+        return " ".join(cString.split())
 
     def FormateText(self, cString:str):
         return " ".join(cString.split())

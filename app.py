@@ -4,12 +4,14 @@ from flask_jwt_extended import JWTManager
 from Domain.Enums.TokenEnum import TokenEnum
 
 from Presentation.Controllers.DefaultController import defaultController
+from Presentation.Controllers.PruebaController import pruebaController
 
 app = Flask(__name__)
-app.config["JWT_SECRET_KEY"] = TokenEnum.TokenKey
+app.config["JWT_SECRET_KEY"] = TokenEnum.Key
 jwt = JWTManager(app)
 
 app.register_blueprint(defaultController)
+app.register_blueprint(pruebaController)
 
 def axpag_no_found(error):
     response = jsonify({'code':404})
