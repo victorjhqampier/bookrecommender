@@ -14,7 +14,7 @@ class AuthorNode(IAuthor):
     __helper: IHelper = HelperCommon()
     __crypo: ICryptography = CryptographyCommon()
     __arrComman: list = ["MERGE ", "ON CREATE SET ", " ON MATCH SET "]
-    __cName: str = "Responsibles"
+    __cName: str = "Publishers"
 
     def __init__(self):
         pass
@@ -31,15 +31,14 @@ class AuthorNode(IAuthor):
 
         for item in arrAuthor:
             if(item.cName == ''):
-                raise Exception("cSurname no puede estar vacio.")
+                raise Exception("CNombre no puede estar vacio.")
             arrAlias.append(f"p{str(nContador)}")
-            cIdentity = self.__helper.GenerateIdentifier(f"{item.cSurname} {item.cName}")
+            cIdentity = self.__helper.GenerateIdentifier(f"{item.cName} {item.cPlace}")
             cNodeHeader = self.__arrComman[0] + f"(p{str(nContador)}:" + self.__cName + "{identity_at:'"+cIdentity+"'})"
             cQuery = f"{self.__arrComman[1]}"\
-                f"{arrAlias[nContador]}.cSurname='{self.__helper.FormateText(item.cSurname)}',"\
                 f"{arrAlias[nContador]}.cName='{self.__helper.FormateText(item.cName)}',"\
                 f"{arrAlias[nContador]}.cPlace='{self.__helper.FormateText(item.cPlace)}',"\
-                f"{arrAlias[nContador]}.index_at='{self.__helper.GenerateIndex(f'{item.cSurname} {item.cName}')}',"\
+                f"{arrAlias[nContador]}.index_at='{self.__helper.GenerateIndex(f'{item.cName} {item.cPlace}')}',"\
                 f"{arrAlias[nContador]}.status_at=true,"\
                 f"{arrAlias[nContador]}.updated_at='{str(datetime.now())}',"\
                 f"{arrAlias[nContador]}.created_at='{str(datetime.now())}'"\
@@ -53,6 +52,6 @@ class AuthorNode(IAuthor):
         arrList: list = self.__db.First(cNodeHeader)
         nContador = 0
         for item in arrAuthor:
-            item.idAuthor = self.__crypo.CifrarCadena(str(arrList["idAuthor"][nContador]),CryptoEnum.Key)
+            item.idAuthor = self.__crypo.CifrarCadena(str(arrList["idPublisher"][nContador]),CryptoEnum.Key)
             nContador += 1
         return arrAuthor
