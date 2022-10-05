@@ -13,11 +13,11 @@ class HelperCommon(IHelper):
         temp = cString.split(" ")
         arrTemp = []
         for x in temp:
-            if not (x in self.__Words):
+            if not (x in self.__Words) and len(x) > 2:
                 arrTemp.append(x)
         cString = " ".join(arrTemp)        
         cString = ''.join(char for char in cString if char.isalnum())
-        return cString
+        return str(hash(cString))
     
     def GenerateIndex(self, cString:str):
         cString = cString.lower()
@@ -25,7 +25,7 @@ class HelperCommon(IHelper):
         temp = cString.split(" ")
         arrTemp = []
         for x in temp:
-            if not (x in self.__Words):
+            if not (x in self.__Words) and len(x) > 2:
                 arrTemp.append(''.join(char for char in x if char.isalnum()))
         cString = " ".join(arrTemp)        
         return " ".join(cString.split())

@@ -19,8 +19,7 @@ class AuthorNode(IAuthor):
     def __init__(self):
         pass
 
-    def MergeAuthors(self, arrAuthor: list):
-        Result: list = []
+    def MergeAuthors(self, arrAuthor: list):        
         nContador: int = 0
         arrQuery: list = []
         cIdentity: str = ""
@@ -30,15 +29,13 @@ class AuthorNode(IAuthor):
         cQuery: str = ""
 
         for item in arrAuthor:
-            if(item.cName == ''):
-                raise Exception("cSurname no puede estar vacio.")
             arrAlias.append(f"p{str(nContador)}")
             cIdentity = self.__helper.GenerateIdentifier(f"{item.cSurname} {item.cName}")
             cNodeHeader = self.__arrComman[0] + f"(p{str(nContador)}:" + self.__cName + "{identity_at:'"+cIdentity+"'})"
             cQuery = f"{self.__arrComman[1]}"\
                 f"{arrAlias[nContador]}.cSurname='{self.__helper.FormateText(item.cSurname)}',"\
                 f"{arrAlias[nContador]}.cName='{self.__helper.FormateText(item.cName)}',"\
-                f"{arrAlias[nContador]}.cPlace='{self.__helper.FormateText(item.cPlace)}',"\
+                f"{arrAlias[nContador]}.cPlace='{self.__helper.FormateText(item.cPlace.upper())}',"\
                 f"{arrAlias[nContador]}.index_at='{self.__helper.GenerateIndex(f'{item.cSurname} {item.cName}')}',"\
                 f"{arrAlias[nContador]}.status_at=true,"\
                 f"{arrAlias[nContador]}.updated_at='{str(datetime.now())}',"\
@@ -53,6 +50,6 @@ class AuthorNode(IAuthor):
         arrList: list = self.__db.First(cNodeHeader)
         nContador = 0
         for item in arrAuthor:
-            item.idAuthor = self.__crypo.CifrarCadena(str(arrList["idAuthor"][nContador]),CryptoEnum.Key)
+            item.idAuthor = str(arrList["idAuthor"][nContador])
             nContador += 1
         return arrAuthor

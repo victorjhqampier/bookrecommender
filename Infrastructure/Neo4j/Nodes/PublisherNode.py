@@ -1,26 +1,24 @@
 from Domain.Common.CryptographyCommon import CryptographyCommon
-from Domain.Enums.CryptoEnum import CryptoEnum
-from Domain.Interfaces.IAuthor import IAuthor
 from Domain.Interfaces.IContext import IContext
 from Domain.Interfaces.ICryptography import ICryptography
 from Domain.Interfaces.IHelper import IHelper
 from Domain.Common.HelperCommon import HelperCommon
+from Domain.Interfaces.IPublisher import IPublisher
 from Infrastructure.Neo4j.DbContext import DbContext
 from datetime import datetime
 
-class AuthorNode(IAuthor):
+class PublisherNode(IPublisher):
 
     __db: IContext = DbContext()
     __helper: IHelper = HelperCommon()
-    __crypo: ICryptography = CryptographyCommon()
     __arrComman: list = ["MERGE ", "ON CREATE SET ", " ON MATCH SET "]
     __cName: str = "Publishers"
 
     def __init__(self):
         pass
 
-    def MergeAuthors(self, arrAuthor: list):
-        Result: list = []
+    def MergePublisher(self, arrPublisher: list):
+        
         nContador: int = 0
         arrQuery: list = []
         cIdentity: str = ""
@@ -29,15 +27,15 @@ class AuthorNode(IAuthor):
         cNodeHeader: str = ""
         cQuery: str = ""
 
-        for item in arrAuthor:
+        for item in arrPublisher:
             if(item.cName == ''):
                 raise Exception("CNombre no puede estar vacio.")
-            arrAlias.append(f"p{str(nContador)}")
-            cIdentity = self.__helper.GenerateIdentifier(f"{item.cName} {item.cPlace}")
-            cNodeHeader = self.__arrComman[0] + f"(p{str(nContador)}:" + self.__cName + "{identity_at:'"+cIdentity+"'})"
+            arrAlias.append(f"n{str(nContador)}")
+            cIdentity = self.__helper.GenerateIdentifier(f"{item.cName}")
+            cNodeHeader = self.__arrComman[0] + f"(n{str(nContador)}:" + self.__cName + "{identity_at:'"+cIdentity+"'})"
             cQuery = f"{self.__arrComman[1]}"\
                 f"{arrAlias[nContador]}.cName='{self.__helper.FormateText(item.cName)}',"\
-                f"{arrAlias[nContador]}.cPlace='{self.__helper.FormateText(item.cPlace)}',"\
+                f"{arrAlias[nContador]}.cPlace='{self.__helper.FormateText(item.cPlace.upper())}',"\
                 f"{arrAlias[nContador]}.index_at='{self.__helper.GenerateIndex(f'{item.cName} {item.cPlace}')}',"\
                 f"{arrAlias[nContador]}.status_at=true,"\
                 f"{arrAlias[nContador]}.updated_at='{str(datetime.now())}',"\
@@ -48,10 +46,10 @@ class AuthorNode(IAuthor):
             nContador += 1
             arrQuery.append(f"{cNodeHeader} {cQuery}")
 
-        cNodeHeader = " ".join(arrQuery) + self.__db.Select(f"[{','.join(arrSelect)}] AS idAuthor")
+        cNodeHeader = " ".join(arrQuery) + self.__db.Select(f"[{','.join(arrSelect)}] AS idPublisher")
         arrList: list = self.__db.First(cNodeHeader)
         nContador = 0
-        for item in arrAuthor:
-            item.idAuthor = self.__crypo.CifrarCadena(str(arrList["idPublisher"][nContador]),CryptoEnum.Key)
+        for item in arrPublisher:
+            item.idPublisher = str(arrList["idPublisher"][nContador])
             nContador += 1
-        return arrAuthor
+        return arrPublisher

@@ -1,3 +1,5 @@
+START s=NODE(517) MATCH(s) RETURN s
+
 MERGE (doc:Books {axid:'2las computadoras administracion punto vista ejecutivo 1973 brink2 caxi maquera'}) 
 	ON CREATE SET
 		doc.title='2Las computadoras y la administración',
