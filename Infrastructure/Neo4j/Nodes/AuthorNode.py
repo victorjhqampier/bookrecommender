@@ -29,7 +29,7 @@ class AuthorNode(IAuthor):
         cQuery: str = ""
 
         for item in arrAuthor:
-            arrAlias.append(f"p{str(nContador)}")
+            arrAlias.append(f"a{str(nContador)}")
             cIdentity = self.__helper.GenerateIdentifier(f"{item.cSurname} {item.cName}")
             cNodeHeader = self.__arrComman[0] + f"(p{str(nContador)}:" + self.__cName + "{identity_at:'"+cIdentity+"'})"
             cQuery = f"{self.__arrComman[1]}"\
