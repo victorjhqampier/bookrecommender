@@ -1,23 +1,23 @@
-from Domain.Entities.Data.ClassificationDataEntity import ClassificationDataEntity
 from Domain.Entities.Data.SerialTitlesDataEntity import SerialTitlesDataEntity
 from Domain.Interfaces.IContext import IContext
 from Domain.Interfaces.IHelper import IHelper
 from Domain.Common.HelperCommon import HelperCommon
+from Domain.Interfaces.ISerialTitle import ISerialTitle
 from Infrastructure.Neo4j.DbContext import DbContext
 from datetime import datetime
 
-class SerialTitleNode():
+class SerialTitleNode(ISerialTitle):
 
     __db: IContext = DbContext()
     __helper: IHelper = HelperCommon()
-    __arrComman: list = ["MERGE ", "ON CREATE SET ", " ON MATCH SET "]
+    __arrComman: list = ["MERGE ", " ON CREATE SET ", " ON MATCH SET "]
     __cName: str = "SerialTitles"
     __cReturn: str = "ID (s) AS idSerialTitle"
 
     def __init__(self):
         pass
 
-    def MergePublisher(self, objSerialTitle: SerialTitlesDataEntity):
+    def MergeSerialTitle(self, objSerialTitle: SerialTitlesDataEntity):
                
         cIdentity: str = ""
         cNodeHeader: str = ""
@@ -38,6 +38,8 @@ class SerialTitleNode():
                 f"s.updated_at='{str(datetime.now())}'"
 
         cNodeHeader = cNodeHeader + cQuery + self.__db.Select(self.__cReturn)
-        objSerialTitle.idSerialTitle = self.__db.First(cNodeHeader)
+        
+        objIdSerial = self.__db.First(cNodeHeader)
+        objSerialTitle.idSerialTitle = objIdSerial['idSerialTitle']
 
         return objSerialTitle

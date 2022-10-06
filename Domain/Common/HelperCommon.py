@@ -31,4 +31,6 @@ class HelperCommon(IHelper):
         return " ".join(cString.split())
 
     def FormateText(self, cString:str):
+        if(cString == ""):
+            return ""
         return " ".join(cString.split())

@@ -1,5 +1,4 @@
 from Domain.Common.CryptographyCommon import CryptographyCommon
-from Domain.Enums.CryptoEnum import CryptoEnum
 from Domain.Interfaces.IAuthor import IAuthor
 from Domain.Interfaces.IContext import IContext
 from Domain.Interfaces.ICryptography import ICryptography
@@ -12,7 +11,6 @@ class AuthorNode(IAuthor):
 
     __db: IContext = DbContext()
     __helper: IHelper = HelperCommon()
-    __crypo: ICryptography = CryptographyCommon()
     __arrComman: list = ["MERGE ", "ON CREATE SET ", " ON MATCH SET "]
     __cName: str = "Responsibles"
 

@@ -1,22 +1,23 @@
 from Domain.Entities.Data.ClassificationDataEntity import ClassificationDataEntity
+from Domain.Interfaces.IClassification import IClassification
 from Domain.Interfaces.IContext import IContext
 from Domain.Interfaces.IHelper import IHelper
 from Domain.Common.HelperCommon import HelperCommon
 from Infrastructure.Neo4j.DbContext import DbContext
 from datetime import datetime
 
-class ClassificationNode():
+class ClassificationNode(IClassification):
 
     __db: IContext = DbContext()
     __helper: IHelper = HelperCommon()
-    __arrComman: list = ["MERGE ", "ON CREATE SET ", " ON MATCH SET "]
+    __arrComman: list = ["MERGE ", " ON CREATE SET ", " ON MATCH SET "]
     __cName: str = "Classifications"
     __cReturn: str = "ID (c) AS idClassification"
 
     def __init__(self):
         pass
 
-    def MergePublisher(self, objClassification: ClassificationDataEntity):
+    def MergeClassification(self, objClassification: ClassificationDataEntity):
                
         cIdentity: str = ""
         cNodeHeader: str = ""
@@ -38,6 +39,7 @@ class ClassificationNode():
                 f"c.updated_at='{str(datetime.now())}'"
 
         cNodeHeader = cNodeHeader + cQuery + self.__db.Select(self.__cReturn)
-        objClassification.idClassification = self.__db.First(cNodeHeader)
-
+        
+        objIdClass = self.__db.First(cNodeHeader)
+        objClassification.idClassification = objIdClass['idClassification']
         return objClassification
