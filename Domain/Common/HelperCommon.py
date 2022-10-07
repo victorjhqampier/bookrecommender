@@ -17,7 +17,7 @@ class HelperCommon(IHelper):
                 arrTemp.append(x)
         cString = " ".join(arrTemp)        
         cString = ''.join(char for char in cString if char.isalnum())
-        return str(hash(cString))
+        return cString
     
     def GenerateIndex(self, cString:str):
         cString = cString.lower()
