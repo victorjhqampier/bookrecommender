@@ -3,16 +3,21 @@ from abc import abstractmethod
 
 class IContext(metaclass=ABCMeta):
     @abstractmethod
-    def Where(self, cWhere:str):
+    def Query(self, cQuery:str):
         pass       
+
+    @abstractmethod
+    def Where(self, cWhere:str):
+        pass
 
     @abstractmethod
     def Select(self, cReturn:str):
         pass
+
     @abstractmethod
-    def ToList(self,arrQuery:str):
+    def ToList(self):
         pass
 
     @abstractmethod
-    def First(self,arrQuery:str):
+    def FirstOrDefault(self):
         pass

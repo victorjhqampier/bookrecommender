@@ -44,10 +44,12 @@ class AuthorNode(IAuthor):
             nContador += 1
             arrQuery.append(f"{cNodeHeader} {cQuery}")
 
-        cNodeHeader = " ".join(arrQuery) + self.__db.Select(f"[{','.join(arrSelect)}] AS idAuthor")
-        arrList: list = self.__db.First(cNodeHeader)
-        nContador = 0
-        for item in arrAuthor:
-            item.idAuthor = str(arrList["idAuthor"][nContador])
-            nContador += 1
-        return arrAuthor
+        cNodeHeader = " ".join(arrQuery)# + self.__db.Select(f"[{','.join(arrSelect)}] AS idAuthor")
+        return cNodeHeader
+        # arrList: list = self.__db.First(cNodeHeader)
+        # arrList: list = self.__db.Query(cQuery=" ".join(arrQuery)).Select(cSelect = f"[{','.join(arrSelect)}] AS idAuthor").FirstOrDefault()
+        # nContador = 0
+        # for item in arrAuthor:
+        #     item.idAuthor = str(arrList["idAuthor"][nContador])
+        #     nContador += 1
+        # return arrAuthor

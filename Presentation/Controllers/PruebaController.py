@@ -24,10 +24,10 @@ from Infrastructure.Neo4j.Nodes.ItemNode import ItemNode
 from Infrastructure.Neo4j.Nodes.PublisherNode import PublisherNode
 from Infrastructure.Neo4j.Nodes.SerialTitleNode import SerialTitleNode
 
-# Autor : IAuthor = AuthorNode()
+Autor : IAuthor = AuthorNode()
 # Publisher: IPublisher = PublisherNode()
 # Classification : IClassification = ClassificationNode()
-SerialTitle:ISerialTitle = SerialTitleNode()
+# SerialTitle:ISerialTitle = SerialTitleNode()
 # Item :IItem = ItemNode()
 # Copy:ICopy = CopyNode()
 EasyResponse:IEasyResponse = EasyResponseCommon()
@@ -44,13 +44,20 @@ def PruebaController():
     #     InputEmperesa:PublisherDataEntity = FromBody(item, PublisherDataEntity)
     #     arrAuthorIn.append(InputEmperesa)
     # arrGuardarEmpre:list = Publisher.MergePublisher(arrAuthorIn)
+
+    arrAuthorIn:list =[]
+    for item in arrInput["responsibles"]:
+        item["idAuthor"] = ''     
+        InputEmperesa:AuthorDataEntity = FromBody(item, AuthorDataEntity)
+        arrAuthorIn.append(InputEmperesa)
+    arrGuardarEmpre:list = Autor.MergeAuthors(arrAuthorIn)
     
     # arrInput['classification']['idClassification'] = ''
     # InputEmperesa:ClassificationDataEntity = FromBody(arrInput['classification'], ClassificationDataEntity)
 
-    arrInput['serialTitle']['idSerialTitle'] = ''
-    InputEmperesa:SerialTitlesDataEntity = FromBody(arrInput['serialTitle'], SerialTitlesDataEntity)
-    temp = SerialTitle.MergeSerialTitle(InputEmperesa)
+    # arrInput['serialTitle']['idSerialTitle'] = ''
+    # InputEmperesa:SerialTitlesDataEntity = FromBody(arrInput['serialTitle'], SerialTitlesDataEntity)
+    # temp = SerialTitle.MergeSerialTitle(InputEmperesa)
 
     # arrInput['item']['idItem'] = ''
     # InputEmperesa:ItemDataEntity = FromBody(arrInput['item'], ItemDataEntity)
@@ -62,4 +69,4 @@ def PruebaController():
     #     InputEmperesa:CopyDataEntity = FromBody(item, CopyDataEntity)
     #     arrAuthorIn.append(InputEmperesa)
     # arrGuardarEmpre = Copy.MergeCopies(arrAuthorIn)
-    return StatusCode(200,EasyResponse.EasySuccessRespond(temp)) 
+    return StatusCode(200,EasyResponse.EasySuccessRespond(arrGuardarEmpre)) 
