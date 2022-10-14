@@ -29,6 +29,19 @@ class DbContext(IContext):
         self.arrQuery[0] += f"MERGE ({cAlias}:{cNode}"+"{identity_at:'"+cKey+"'})"
         return self
         # return DbContext()
+    def MergeRelation(self, cAlias:str,idNodeFrom:str, cRelation:str, idNodeTo:str, cKey:str = None):
+        self.cAlias = cAlias
+        tempt:str = "{identity_at:'"+cKey+"'})" if cKey is not None else ""
+        self.arrQuery[0] += f"MERGE ({idNodeFrom})-[{self.cAlias}:{cRelation}{tempt}]->({idNodeTo})"
+        return self
+
+    def Merges(self, idNodeFrom:str,cRelationShip:str, idNodeTo:str, tParams:tuple = None):
+        srdr = "MATCH (n), (m) where id(n) = 5 and id(m) = 4"
+        esrt = "MERGE (n)-[:AUTHOR{rol: 'Autor'}]->(m)"
+        self.cAlias = cAlias
+        self.arrQuery[0] += f"MERGE ({cAlias}:{cNode}"+"{identity_at:'"+cKey+"'})"
+        return self
+        
     
     def OnCreate(self, cDict:dict):
         self.arrQuery[0] += f" ON CREATE SET "        
@@ -40,6 +53,7 @@ class DbContext(IContext):
             )
         self.arrQuery[0] += ",".join(temp) + " "
         return self
+
     def OnMatch(self, cDict:dict):
         self.arrQuery[0] += f"ON MATCH SET "        
         temp:list = []

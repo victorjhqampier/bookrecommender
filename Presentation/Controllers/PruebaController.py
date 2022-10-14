@@ -24,11 +24,11 @@ from Infrastructure.Neo4j.Nodes.ItemNode import ItemNode
 from Infrastructure.Neo4j.Nodes.PublisherNode import PublisherNode
 from Infrastructure.Neo4j.Nodes.SerialTitleNode import SerialTitleNode
 
-Autor : IAuthor = AuthorNode()
+# Autor : IAuthor = AuthorNode()
 # Publisher: IPublisher = PublisherNode()
 # Classification : IClassification = ClassificationNode()
 # SerialTitle:ISerialTitle = SerialTitleNode()
-# Item :IItem = ItemNode()
+Item :IItem = ItemNode()
 # Copy:ICopy = CopyNode()
 EasyResponse:IEasyResponse = EasyResponseCommon()
 
@@ -45,23 +45,24 @@ def PruebaController():
     #     arrAuthorIn.append(InputEmperesa)
     # arrGuardarEmpre:list = Publisher.MergePublisher(arrAuthorIn)
 
-    arrAuthorIn:list =[]
-    for item in arrInput["responsibles"]:
-        item["idAuthor"] = ''     
-        InputEmperesa:AuthorDataEntity = FromBody(item, AuthorDataEntity)
-        arrAuthorIn.append(InputEmperesa)
-    arrGuardarEmpre:list = Autor.MergeAuthors(arrAuthorIn)
+    # arrAuthorIn:list =[]
+    # for item in arrInput["responsibles"]:
+    #     item["idAuthor"] = ''     
+    #     InputEmperesa:AuthorDataEntity = FromBody(item, AuthorDataEntity)
+    #     arrAuthorIn.append(InputEmperesa)
+    # arrGuardarEmpre:list = Autor.MergeAuthors(arrAuthorIn)
     
     # arrInput['classification']['idClassification'] = ''
     # InputEmperesa:ClassificationDataEntity = FromBody(arrInput['classification'], ClassificationDataEntity)
+    # intem = Classification.MergeClassification(InputEmperesa)
 
     # arrInput['serialTitle']['idSerialTitle'] = ''
     # InputEmperesa:SerialTitlesDataEntity = FromBody(arrInput['serialTitle'], SerialTitlesDataEntity)
     # temp = SerialTitle.MergeSerialTitle(InputEmperesa)
 
-    # arrInput['item']['idItem'] = ''
-    # InputEmperesa:ItemDataEntity = FromBody(arrInput['item'], ItemDataEntity)
-    # temp = Item.CreateItem(InputEmperesa)
+    arrInput['item']['idItem'] = ''
+    InputEmperesa:ItemDataEntity = FromBody(arrInput['item'], ItemDataEntity)
+    temp = Item.CreateItem(InputEmperesa)
     
     # arrAuthorIn:list =[]
     # for item in arrInput["copies"]:
@@ -69,4 +70,4 @@ def PruebaController():
     #     InputEmperesa:CopyDataEntity = FromBody(item, CopyDataEntity)
     #     arrAuthorIn.append(InputEmperesa)
     # arrGuardarEmpre = Copy.MergeCopies(arrAuthorIn)
-    return StatusCode(200,EasyResponse.EasySuccessRespond(arrGuardarEmpre)) 
+    return StatusCode(200,EasyResponse.EasySuccessRespond(temp)) 

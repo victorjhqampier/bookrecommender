@@ -26,6 +26,9 @@ class AuthorNode(IAuthor):
         result:list =[]
 
         for item in arrAuthor:
+            if(item.cSurname == ''):
+                raise Exception("CNombre no puede estar vacio.")
+
             arrAlias.append(self.__cAlias + str(nContador))
             arrSelect.append(f"ID({arrAlias[nContador]})")
             cIdentity = self.__helper.GenerateIdentifier(f"{item.cSurname} {item.cName}")
@@ -33,9 +36,9 @@ class AuthorNode(IAuthor):
             arrNodeSaving.Merge(arrAlias[nContador],self.__cName, cIdentity
                 ).OnCreate(
                     {
-                        "cSurname":self.__helper.FormateText(item.cSurname),
-                        "cName":self.__helper.FormateText(item.cName),
-                        "cPlace":self.__helper.FormateText(item.cPlace.upper()),
+                        "cSurname":self.__helper.FormateText(item.cSurname.title()),
+                        "cName":self.__helper.FormateText(item.cName.title()),
+                        "cPlace":self.__helper.FormateText(item.cPlace.title()),
                         "index_at":self.__helper.GenerateIndex(f'{item.cSurname} {item.cName}'),
                         "status_at":True,
                         "updated_at":str(datetime.now()),
