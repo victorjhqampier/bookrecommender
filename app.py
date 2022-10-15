@@ -23,3 +23,6 @@ def axpag_no_found(error):
 if __name__ == '__main__':
     app.register_error_handler(404,axpag_no_found)
     app.run(debug=True,port='5007',host='0.0.0.0')
+
+#https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-uswgi-and-nginx-on-ubuntu-18-04
+#How To Serve Flask Applications with uWSGI and Nginx on Ubuntu 18.04
