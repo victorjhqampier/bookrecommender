@@ -14,8 +14,8 @@ class HelperCommon(IHelper):
         arrTemp = []
         for x in temp:
             if not (x in self.__Words) and len(x) > 2:
-                arrTemp.append(x)
-        cString = " ".join(arrTemp)        
+                arrTemp.append(x)  
+        cString = " ".join(arrTemp)     
         cString = ''.join(char for char in cString if char.isalnum())
         return cString
     
@@ -27,6 +27,7 @@ class HelperCommon(IHelper):
         for x in temp:
             if not (x in self.__Words) and len(x) > 2:
                 arrTemp.append(''.join(char for char in x if char.isalnum()))
+        arrTemp.sort()
         cString = " ".join(arrTemp)        
         return " ".join(cString.split())
 

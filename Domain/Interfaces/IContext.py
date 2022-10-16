@@ -13,11 +13,15 @@ class IContext(metaclass=ABCMeta):
     @abstractmethod
     def Merge(self, cAlias:str,cNode:str, cKey:str):
         pass
-    
+
     @abstractmethod
-    def MergeRelation(self, cAlias:str,cNodeFrom:str, cRelation:str, cNodeTo:str, cKey:str = None):
+    def Merge(self, idNodeFrom:int,cRelationShip:str, idNodeTo:int):
         pass
 
+    @abstractmethod
+    def Merge(self, idNodeFrom:int,cRelationShip:str, idNodeTo:int, tParams:tuple):
+        pass
+    
     @abstractmethod
     def OnCreate(self, cDict:dict):
         pass

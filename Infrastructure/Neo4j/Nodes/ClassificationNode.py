@@ -1,4 +1,5 @@
 from Domain.Entities.Data.ClassificationDataEntity import ClassificationDataEntity
+from Domain.Enums.NodeEnum import NodeEnum
 from Domain.Interfaces.IClassification import IClassification
 from Domain.Interfaces.IContext import IContext
 from Domain.Interfaces.IHelper import IHelper
@@ -10,7 +11,7 @@ class ClassificationNode(IClassification):
 
     __db: IContext = DbContext()
     __helper: IHelper = HelperCommon()
-    __cName: str = "Classifications"
+    __cName: str = NodeEnum.Classification
     __cAlias:str = "r"
 
     def __init__(self):
@@ -44,20 +45,3 @@ class ClassificationNode(IClassification):
         result = arrNodeSaving.FirstOrDefault()
         objClassification.idClassification = result['idClassification']
         return objClassification
-        # return result
-        # cNodeHeader = self.__arrComman[0] + f"(c:" + self.__cName + "{identity_at:'"+cIdentity+"'})"
-        # cQuery = f"{self.__arrComman[1]}"\
-        #         f"c.}',"\
-        #         f"c.}',"\
-        #         f"c.index_at='{}',"\
-        #         f"c.status_at=true,"\
-        #         f"c.updated_at='{str(datetime.now())}',"\
-        #         f"c.created_at='{str(datetime.now())}'"\
-        #         f"{self.__arrComman[2]}"\
-        #         f"c.updated_at='{str(datetime.now())}'"
-
-        # cNodeHeader = cNodeHeader + cQuery + self.__db.Select(self.__cReturn)
-        
-        # objIdClass = self.__db.First(cNodeHeader)
-        # objClassification.idClassification = objIdClass['idClassification']
-        # return objClassification

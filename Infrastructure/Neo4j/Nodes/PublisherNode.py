@@ -1,4 +1,5 @@
 from Domain.Common.CryptographyCommon import CryptographyCommon
+from Domain.Enums.NodeEnum import NodeEnum
 from Domain.Interfaces.IContext import IContext
 from Domain.Interfaces.ICryptography import ICryptography
 from Domain.Interfaces.IHelper import IHelper
@@ -11,7 +12,7 @@ class PublisherNode(IPublisher):
 
     __db: IContext = DbContext()
     __helper: IHelper = HelperCommon()
-    __cName: str = "Publishers"
+    __cName: str = NodeEnum.publishers
     __cAlias: str = "h"
 
     def __init__(self):

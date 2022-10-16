@@ -6,12 +6,14 @@ from Domain.Enums.TokenEnum import TokenEnum
 from Presentation.Controllers.DefaultController import defaultController
 from Presentation.Controllers.PruebaController import pruebaController
 from Presentation.Controllers.BookController import bookController
+from Presentation.Controllers.AuthController import authenticationController
 
 app = Flask(__name__)
 app.config["JWT_SECRET_KEY"] = TokenEnum.Key
 jwt = JWTManager(app)
 
 app.register_blueprint(defaultController)
+app.register_blueprint(authenticationController, url_prefix="/api/authentication")
 app.register_blueprint(bookController,url_prefix="/api/books")
 app.register_blueprint(pruebaController)
 

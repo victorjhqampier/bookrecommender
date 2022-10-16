@@ -1,4 +1,5 @@
 from Domain.Common.CryptographyCommon import CryptographyCommon
+from Domain.Enums.NodeEnum import NodeEnum
 from Domain.Interfaces.IAuthor import IAuthor
 from Domain.Interfaces.IContext import IContext
 from Domain.Interfaces.ICryptography import ICryptography
@@ -11,7 +12,7 @@ class AuthorNode(IAuthor):
 
     __db: IContext = DbContext()
     __helper: IHelper = HelperCommon()
-    __cName: str = "Responsibles"
+    __cName: str = NodeEnum.Responsibles
     __cAlias:str = "p"
 
     def __init__(self):

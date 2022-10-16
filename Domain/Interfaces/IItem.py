@@ -4,8 +4,8 @@ from Domain.Entities.Data.ItemDataEntity import ItemDataEntity
 
 class IItem(metaclass=ABCMeta):
     @abstractmethod
-    def GetItem(self,itemIdentity:str):
+    def GetItem(self,objItem: ItemDataEntity):
         pass
     @abstractmethod
-    def CreateItem(self, objItem: ItemDataEntity):
+    def CreateItem(self, objItem: ItemDataEntity,cMoreDescription:str = ""):
         pass

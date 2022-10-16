@@ -1,3 +1,4 @@
+from Domain.Enums.NodeEnum import NodeEnum
 from Domain.Interfaces.IContext import IContext
 from Domain.Interfaces.ICopy import ICopy
 from Domain.Interfaces.IHelper import IHelper
@@ -9,7 +10,7 @@ class CopyNode(ICopy):
 
     __db: IContext = DbContext()
     __helper: IHelper = HelperCommon()
-    __cName: str = "Copies"
+    __cName: str = NodeEnum.Copies
     __cAlias:str = "e"
 
     def __init__(self):
