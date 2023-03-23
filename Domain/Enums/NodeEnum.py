@@ -1,8 +1,8 @@
 from enum import Enum
 class NodeEnum(str, Enum):
-    Item="Items"
-    Classification = "Classifications"
-    Responsibles = "Responsibles"   
-    SerialTitle="Serialtitles"
-    publishers = "publishers"
-    Copies="Copies"
+    Item="Title"
+    Classification = "Classification"
+    Responsibles = "Person"
+    SerialTitle="Serial_Title"
+    publishers = "Publisher"
+    Copies="Copy"

@@ -14,6 +14,17 @@ from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 
+#=======================================================================
+#   © Victor JCaxi - All rights reserved
+#-----------------------------------------------------------------------
+#   Aim         : Registrar / Mesclar un libro sobre Neo4j Database
+#   Created     : 22-03-2023
+#   By          : Victor JCaxi
+#-----------------------------------------------------------------------
+#   Changes:
+#   By        Date       Aim
+#=======================================================================
+
 EasyResponse:IEasyResponse = EasyResponseCommon()
 Authentication:IAutenticacion = AutenticacionDatabase()
 
@@ -38,7 +49,7 @@ def IniciarSesion():
         return StatusCode(200,EasyResponse.EasySuccessRespond(newObjToken))
     
     except Exception as ex:        
-        return StatusCode(200,EasyResponse.EasyErrorRespond("99","Error general interno. " + str(ex)))
+        return StatusCode(500,EasyResponse.EasyErrorRespond("99","Error general interno. " + str(ex)))
 
 #Para verificar
 #REQUIERE TOKEN Y corn
@@ -47,4 +58,4 @@ def IniciarSesion():
 def axroute_verify_token():
     user = get_jwt_identity()
     # return StatusCode(200,IndexInterface(status=200,message=user))
-    return StatusCode(200,EasyResponse.EasySuccessRespond({"message":user}))
+    return StatusCode(500,EasyResponse.EasySuccessRespond({"message":user}))

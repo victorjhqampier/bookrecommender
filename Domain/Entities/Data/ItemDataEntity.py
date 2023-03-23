@@ -1,9 +1,10 @@
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Optional
 
 @dataclass
 class ItemDataEntity:
-    idItem:str
+    idItem:Optional[str]
     cTitle:str
     cSubtitle:str
     cEdition:str
@@ -11,8 +12,8 @@ class ItemDataEntity:
     cContent:str
     cIsbn:str
     cNotes:str
-    cPhysicalDescription:str
+    cPhysicalDescription:Optional[str]
     cTopics:str
     cType:str
     cImage:str
-    cLink:str
+    cLink:Optional[str]

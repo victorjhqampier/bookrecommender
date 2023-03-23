@@ -1,10 +1,11 @@
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Optional
 
 @dataclass
 class AuthorDataEntity:
-    idAuthor:str
-    cName:str
+    idAuthor:Optional[str]
+    cName:Optional[str]
     cSurname:str
-    cPlace:str
+    cPlace:Optional[str]
     cRole:str

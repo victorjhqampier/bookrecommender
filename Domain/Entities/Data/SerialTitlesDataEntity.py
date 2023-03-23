@@ -1,8 +1,9 @@
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Optional
 
 @dataclass
 class SerialTitlesDataEntity:
-    idSerialTitle:str
+    idSerialTitle:Optional[str]
     cTitle:str
-    cNumber:str
+    cNumber:Optional[str]

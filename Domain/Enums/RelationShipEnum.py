@@ -1,7 +1,7 @@
 from enum import Enum
 class RelationShipEnum(str, Enum):    
-    ClassificationToItem = "DEWEY"    
-    SerialTitleToItem ="SERIE"
-    ResponsibleToItem = "RESPONSIBILITY"
-    publisherToItem  = "RELEASE"
-    ItemToCopy ="HAVE"
+    ClassificationToItem = "ASSIGN_DEWEY"    
+    SerialTitleToItem ="PART_TO"
+    ResponsibleToItem = "HAS_RESPONSIBILITY"
+    publisherToItem  = "PUBLISHED"
+    ItemToCopy ="HAS_COPY"

@@ -1,8 +1,8 @@
 from enum import Enum
 class Neo4jEnum(str, Enum):
     DbPrefix="neo4j+s"
-    DbHost = "df309146.databases.neo4j.io"    
+    DbHost = "7ff90d04.databases.neo4j.io"
     DbPort="7687"
-    DbName = "neo4j"
+    DbName = "Instance01"
     DbUser="neo4j"
-    DbPass="Vmh4BeUcKmfC_eOasonUN2i4fIhtyMdaZ2813Y4OEQk"
+    DbPass="eyM053sXid44YxK90JRhgKONJe-gqkCePaKi_K8SvnM"

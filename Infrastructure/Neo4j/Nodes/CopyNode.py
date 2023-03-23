@@ -30,12 +30,12 @@ class CopyNode(ICopy):
 
             arrAlias.append(self.__cAlias + str(nContador))
             arrSelect.append(f"ID({arrAlias[nContador]})")
-            cIdentity = self.__helper.GenerateIdentifier(f"{item.cCode} {item.cNotation}")
+            cIdentity = self.__helper.GenerateIdentifier(f"{item.cLibrary}")
 
             arrNodeSaving.Merge(arrAlias[nContador],self.__cName, cIdentity
                 ).OnCreate(
                     {
-                        "cCode":self.__helper.FormateText(item.cCode),
+                        #"cCode":self.__helper.FormateText(item.cCode),
                         "cNotation":self.__helper.FormateText(item.cNotation.upper()),
                         "cLibrary":self.__helper.FormateText(item.cLibrary.title()),
                         "cLink":self.__helper.FormateText(item.cLink),

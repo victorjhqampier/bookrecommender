@@ -13,8 +13,8 @@ app.config["JWT_SECRET_KEY"] = TokenEnum.Key
 jwt = JWTManager(app)
 
 app.register_blueprint(defaultController)
-app.register_blueprint(authenticationController, url_prefix="/api/authentication")
-app.register_blueprint(bookController,url_prefix="/api/books")
+app.register_blueprint(authenticationController, url_prefix="/api/recommendations/1.0/authentication")
+app.register_blueprint(bookController,url_prefix="/api/recommendations/1.0/books")
 app.register_blueprint(pruebaController)
 
 def axpag_no_found(error):

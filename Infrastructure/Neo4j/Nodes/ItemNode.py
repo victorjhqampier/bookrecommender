@@ -9,15 +9,13 @@ from datetime import datetime
 
 class ItemNode(IItem):
 
-    __db: IContext = DbContext()
-    __helper: IHelper = HelperCommon()
-    __cName: str = NodeEnum.Item
-    __cAlias:str = "i"
-
     def __init__(self):
-        pass
+        self.__db: IContext = DbContext()
+        self.__helper: IHelper = HelperCommon()
+        self.__cName: str = NodeEnum.Item
+        self.__cAlias:str = "i"
     
-    def GetItem(self,objItem: ItemDataEntity,cMoreDescription:str = ""):
+    def GetItem(self,objItem: ItemDataEntity,cMoreDescription:str = "") -> str:
         cIdentity = self.__helper.GenerateIdentifier(f"{objItem.cIsbn} {objItem.cTitle} {objItem.cSubtitle} {objItem.cEdition} {objItem.nReleased} {objItem.cType} {cMoreDescription}")
         arrNodeSelect = self.__db.Node().Match(NodeEnum.Item, cIdentity)
         cAlias = arrNodeSelect.cAlias
@@ -46,11 +44,11 @@ class ItemNode(IItem):
                         "cContent" : self.__helper.FormateText(objItem.cContent),
                         "cIsbn" : self.__helper.FormateText(objItem.cIsbn),
                         "cNotes" : self.__helper.FormateText(objItem.cNotes),
-                        "cPhysicalDescription" : self.__helper.FormateText(objItem.cPhysicalDescription),
+                        #"cPhysicalDescription" : self.__helper.FormateText(objItem.cPhysicalDescription),
                         "cTopics" : self.__helper.FormateText(objItem.cTopics),
                         "cType" : self.__helper.FormateText(objItem.cType),
                         "cImage" : self.__helper.FormateText(objItem.cImage),
-                        "cLink" : self.__helper.FormateText(objItem.cLink),
+                        #"cLink" : self.__helper.FormateText(objItem.cLink),
                         "nViews" : 0,               
                         "status_at":True,
                         "updated_at":str(datetime.now()),

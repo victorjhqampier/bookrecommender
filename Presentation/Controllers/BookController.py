@@ -13,54 +13,54 @@ from Infrastructure.Neo4j.Programmabilities.BookProgramability import BookProgra
 from flask_cors import CORS, cross_origin
 from flask_jwt_extended import jwt_required
 
-EasyResponse: IEasyResponse = EasyResponseCommon()
+#=======================================================================
+#   © Victor JCaxi - All rights reserved
+#-----------------------------------------------------------------------
+#   Aim         : Registrar / Mesclar un libro sobre Neo4j Database
+#   Created     : 22-03-2023
+#   By          : Victor JCaxi
+#-----------------------------------------------------------------------
+#   Changes:
+#   By        Date       Aim
+#=======================================================================
 
+EasyResponse: IEasyResponse = EasyResponseCommon()
 BookHandler: IBook = BookProgramability()
 
 bookController = Blueprint("bookController", __name__)
 CORS(bookController)
 
-@bookController.route("/save", methods=["POST"])
+@bookController.route("/save-merge", methods=["POST"])
 @jwt_required()
-def SaveBook():
+def SaveMergeBook():
     try:
         arrInput: list = request.get_json()
 
         arrPublisher: list = []
-        for item in arrInput["publishers"]:
-            item["idPublisher"] = ''
+        for item in arrInput["publisher"]:
             Input: PublisherDataEntity = FromBody(item, PublisherDataEntity)
             arrPublisher.append(Input)
 
         arrAuthors: list = []
-        for item in arrInput["responsibles"]:
-            item["idAuthor"] = ''
+        for item in arrInput["person"]:
             Input: AuthorDataEntity = FromBody(item, AuthorDataEntity)
             arrAuthors.append(Input)
 
-        arrInput['classification']['idClassification'] = ''
-        objclassification: ClassificationDataEntity = FromBody(
-            arrInput['classification'], ClassificationDataEntity)
+        objclassification: ClassificationDataEntity = FromBody(arrInput['classification'], ClassificationDataEntity)
 
-        arrInput['serialTitle']['idSerialTitle'] = ''
-        arrInput['serialTitle']['cNumber'] = '' if arrInput['serialTitle']['cNumber'] is None else arrInput['serialTitle']['cNumber']
-        arrInput['serialTitle']['cTitle'] = '' if arrInput['serialTitle']['cTitle'] is None else arrInput['serialTitle']['cTitle']
-        objSerialTitle: SerialTitlesDataEntity = FromBody(
-            arrInput['serialTitle'], SerialTitlesDataEntity)
+        arrInput['serialTitle']['cTitle'] = '' if len(arrInput['serialTitle']) == 0 else arrInput['serialTitle']['cTitle']
+        objSerialTitle: SerialTitlesDataEntity = FromBody(arrInput['serialTitle'], SerialTitlesDataEntity)      
 
-        arrInput['item']['idItem'] = ''
-        objItem: ItemDataEntity = FromBody(arrInput['item'], ItemDataEntity)
+        objItem: ItemDataEntity = FromBody(arrInput['title'], ItemDataEntity)
 
         arrCopies: list = []
-        for item in arrInput["copies"]:
-            item["idCopy"] = ''
+        for item in arrInput["copy"]:
             Input: CopyDataEntity = FromBody(item, CopyDataEntity)
             arrCopies.append(Input)
 
-        result = BookHandler.MergeBook(
-            objItem, arrCopies, arrAuthors, arrPublisher, objclassification, objSerialTitle)
+        result = BookHandler.MergeBook(objItem, arrCopies, arrAuthors, arrPublisher, objclassification, objSerialTitle)
 
         return StatusCode(200, EasyResponse.EasySuccessRespond(result))
 
     except Exception as e:
-        return StatusCode(200, EasyResponse.EasyErrorRespond("99", "Error general interno. " + str(e)))
+        return StatusCode(500, EasyResponse.EasyErrorRespond("99", "Error general interno. " + str(e)))

@@ -2,6 +2,7 @@ from Domain.Entities.Data.ClassificationDataEntity import ClassificationDataEnti
 from Domain.Entities.Data.ItemDataEntity import ItemDataEntity
 from Domain.Entities.Data.PublisherDataEntity import PublisherDataEntity
 from Domain.Entities.Data.SerialTitlesDataEntity import SerialTitlesDataEntity
+from Domain.Entities.Request.MergeBookResponseEntity import MergeBookResponseEntity
 from Domain.Interfaces.IAllRelationship import IAllRelationship
 from Domain.Interfaces.IAuthor import IAuthor
 from Domain.Interfaces.IBook import IBook
@@ -18,31 +19,32 @@ from Infrastructure.Neo4j.Nodes.PublisherNode import PublisherNode
 from Infrastructure.Neo4j.Nodes.SerialTitleNode import SerialTitleNode
 from Infrastructure.Neo4j.Relationships.RelationshipAllProgramability import RelationshipAllProgramability
 
-
-class BookProgramability(IBook):
-    __Item :IItem = ItemNode()
-    __Autor : IAuthor = AuthorNode()
-    __Publisher: IPublisher = PublisherNode()
-    __Classification : IClassification = ClassificationNode()
-    __Copy:ICopy = CopyNode()
-    __SerialTitle:ISerialTitle = SerialTitleNode()
-    __AllRelationShip:IAllRelationship = RelationshipAllProgramability()
+class BookProgramability(IBook):    
 
     def __init__(self):
-        pass
-    
-    def SaveBook(self,objItem:ItemDataEntity, arrCopies:list,arrAuthors:list, arrPublisher:PublisherDataEntity, objClass:ClassificationDataEntity,objSerial:SerialTitlesDataEntity):
-        pass
+        self.__Item :IItem = ItemNode()
+        self.__Autor : IAuthor = AuthorNode()
+        self.__Publisher: IPublisher = PublisherNode()
+        self.__Classification : IClassification = ClassificationNode()
+        self.__Copy:ICopy = CopyNode()
+        self.__SerialTitle:ISerialTitle = SerialTitleNode()
+        self.__AllRelationShip:IAllRelationship = RelationshipAllProgramability()
+        
+    # def SaveBook(self,objItem:ItemDataEntity, arrCopies:list,arrAuthors:list, arrPublisher:PublisherDataEntity, objClass:ClassificationDataEntity,objSerial:SerialTitlesDataEntity):
+    #     pass
 
-    def UpdateBook (self, objItem:ItemDataEntity, arrCopies:list):
-        pass
+    # def UpdateBook (self, objItem:ItemDataEntity, arrCopies:list):
+    #     pass
 
-    def MergeBook(self,objItem:ItemDataEntity, arrCopies:list,arrAuthors:list, arrPublisher:PublisherDataEntity, objClass:ClassificationDataEntity,objSerial:SerialTitlesDataEntity):
+    def MergeBook(self,objItem:ItemDataEntity, arrCopies:list,arrAuthors:list, arrPublisher:PublisherDataEntity, objClass:ClassificationDataEntity,objSerial:SerialTitlesDataEntity) -> MergeBookResponseEntity:
         
         idItem = self.__Item.GetItem(objItem)
         if idItem is not None:
-            objItem.idItem = idItem
-            return objItem
+            # objItem.idItem = idItem
+            return MergeBookResponseEntity(
+                idTitle=idItem,
+                cTitle=objItem.cTitle
+            ) 
 
         arrCopies = self.__Copy.MergeCopies(arrCopies)
         arrAuthors = self.__Autor.MergeAuthors(arrAuthors)
@@ -53,4 +55,7 @@ class BookProgramability(IBook):
 
         self.__AllRelationShip.MergeAllRelationships(objItem,arrCopies,arrAuthors,arrPublisher,objClass,objSerial)
 
-        return objItem
+        return MergeBookResponseEntity(
+                idTitle=objItem.idItem,
+                cTitle=objItem.cTitle
+            ) 
