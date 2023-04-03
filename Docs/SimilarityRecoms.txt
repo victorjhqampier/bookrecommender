@@ -1,0 +1,42 @@
+Dos Consultas igual
+
+---- Mas eficiente ----- 4ms
+MATCH (m:Title)<-[:HAS_RESPONSIBILITY|ASSIGN_DEWEY|PUBLISHED|PART_TO]-(t)-[:HAS_RESPONSIBILITY|ASSIGN_DEWEY|PUBLISHED|PART_TO]->(recom:Title)
+WHERE id(m) = 913
+WITH    m, 
+        recom, 
+        count(t) AS intersection,
+        [(m)<-[:HAS_RESPONSIBILITY|ASSIGN_DEWEY|PUBLISHED|PART_TO]-(mt) | id(mt)] AS s1, 
+        [(recom)<-[:HAS_RESPONSIBILITY|ASSIGN_DEWEY|PUBLISHED|PART_TO]-(recomt) | id(recomt)] AS s2
+WITH recom,intersection, s1 + [x IN s2 WHERE NOT x IN s1] AS union
+WITH recom, ((1.0*intersection)/size(union)) AS jaccard WHERE jaccard > 0.16
+RETURN recom.cTitle, jaccard
+RETURN ((1.0*intersection)/size(union)) AS jaccard, m.cTitle, recom.cTitle
+
+
+
+----- Menos Eficiente ----- 184 ms
+MATCH (m:Title)<-[:HAS_RESPONSIBILITY|ASSIGN_DEWEY|PUBLISHED|PART_TO]-(t)-[:HAS_RESPONSIBILITY|ASSIGN_DEWEY|PUBLISHED|PART_TO]->(other:Title)
+WHERE id(m) = 913 and id(other) = 1682
+WITH m, other, COUNT(t) AS intersection, COLLECT(id(t)) AS i
+MATCH (m)<-[:HAS_RESPONSIBILITY|ASSIGN_DEWEY|PUBLISHED|PART_TO]-(mt)
+WITH other, intersection,i, COLLECT(id(mt)) AS s1
+MATCH (other)<-[:HAS_RESPONSIBILITY|ASSIGN_DEWEY|PUBLISHED|PART_TO]-(ot)
+WITH other,intersection,i, s1, COLLECT(id(ot)) AS s2
+WITH other,intersection, s1 + [x IN s2 WHERE NOT x IN s1] AS union
+RETURN other.cTitle as titulo, ((1.0*intersection)/SIZE(union)) AS jaccard, other.id
+
+-------- por Coautores ----------
+MATCH (m:Title)<-[:HAS_RESPONSIBILITY]-(peo)-[:HAS_RESPONSIBILITY]->(other:Title), (other)<-[:HAS_RESPONSIBILITY]-(co)-[au:HAS_RESPONSIBILITY]->(recom:Title)
+WHERE ID(m)=65 AND m <> recom
+return m,peo,other,co,recom limit 30
+
+---- por Classification ---
+MATCH (doc:Title)<-[:ASSIGN_DEWEY]-(cl1:Classification) 
+WHERE id(doc) = 65
+MATCH (cl2:Classification)-[:ASSIGN_DEWEY]->(recom)
+WHERE cl2.cCode STARTS WITH substring(cl1.cCode, 0, 3)
+RETURN doc,cl2,recom limit 20
+
+-----------------------
+Implemetacion a construir

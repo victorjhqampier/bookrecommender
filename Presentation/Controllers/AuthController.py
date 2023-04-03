@@ -58,4 +58,4 @@ def IniciarSesion():
 def axroute_verify_token():
     user = get_jwt_identity()
     # return StatusCode(200,IndexInterface(status=200,message=user))
-    return StatusCode(500,EasyResponse.EasySuccessRespond({"message":user}))
+    return StatusCode(200,EasyResponse.EasySuccessRespond({"message":user}))

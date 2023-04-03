@@ -1,5 +1,6 @@
 from abc import ABCMeta
 from abc import abstractmethod
+from multipledispatch import dispatch
 
 class IContext(metaclass=ABCMeta):
     @abstractmethod
@@ -48,4 +49,58 @@ class IContext(metaclass=ABCMeta):
 
     @abstractmethod
     def ToString(self):
+        pass
+
+    #Nueva implemetacion
+    @abstractmethod
+    def Query(self):
+        pass
+    
+    @abstractmethod
+    
+    def Match(self):
+        pass
+
+    @abstractmethod
+    def Node(self, cNode:str, cAlias:str):
+        pass
+
+    @abstractmethod
+    def LeftRelationship(self, cRelationship:str, cAlias:str = ""):
+        pass
+
+    @abstractmethod
+    def RightRelationship(self, cRelationship:str, cAlias:str = ""):
+        pass
+
+    @abstractmethod
+    def As(self, cAlias:str):
+        pass
+
+    @abstractmethod    
+    def Where(self):
+        pass
+
+    @abstractmethod
+    def Id(self, cNode:str,IdNode:int):
+        pass
+
+    @abstractmethod
+    def And(self, cNode:str = ""):
+        pass
+
+    @abstractmethod    
+    def With(self):
+        pass
+
+    @abstractmethod
+    def Node(self, cAlias:str):
+        pass
+
+    @abstractmethod
+    def Count(self, cAlias:str):
+        pass
+
+    @abstractmethod
+    def OnArray(self, cNodeTo:str, cRelationship:str, cNodeFrom:str, IdNode:str):
         pass

@@ -13,13 +13,20 @@ class DbContext(IContext):
     def __init__(self):
         self.arrQuery:list = ["","","","","",""]#1:query ; 2: Select : las FirstOrDefault()
         self.cAlias:str = ""
-    
+        self.nElement:int=-1
+
+        # self.arrMatch:list=[]
+        # self.arrWith:list=[]
+        # self.arrCollect:list=[]
+        # self.arrSet:list=[]
+    @dispatch()
     def Node(self):        
         return DbContext()
 
     def Relationship(self):        
         return DbContext()
-        
+
+    @dispatch(str,str)    
     def Match(self, cNode:str, cKey:str):
         self.cAlias = "ii"
         self.arrQuery[0] += f"MATCH ({self.cAlias}:{cNode}"+"{identity_at:'"+cKey+"'})"
@@ -96,12 +103,14 @@ class DbContext(IContext):
         self.arrQuery[0] += ",".join(temp) + " "
         return self
     
+    @dispatch(str)
     def Where(self, cWhere:str):
         self.arrQuery[1] = f"WHERE {cWhere}"
         return self
 
     def Select(self, cSelect:str):
-        self.arrQuery[5] = f"RETURN {cSelect}"
+        # self.arrQuery[5] = f"RETURN {cSelect}"
+        self.arrQuery[-1] = f"RETURN {cSelect}"
         return self
 
     def ToList(self):
@@ -113,3 +122,69 @@ class DbContext(IContext):
     
     def ToString(self):
         return " ".join(self.arrQuery)
+    
+# nueva implementacion para consulta
+    def Query(self):
+        # self.arrQuery = []  
+        return DbContext()
+    
+    @dispatch()
+    def Match(self):        
+        self.nElement +=1
+        self.arrQuery[self.nElement]+="MATCH "
+        return self
+    
+    @dispatch(str,str)
+    def Node(self, cNode:str, cAlias:str):
+        self.arrQuery[self.nElement]+=f"({cAlias}:{cNode})"
+        return self
+    
+    def LeftRelationship(self, cRelationship:str, cAlias:str = ""):
+        self.arrQuery[self.nElement]+=f"<-[{cAlias}:{cRelationship}]-"
+        return self
+        
+    def RightRelationship(self, cRelationship:str, cAlias:str = ""):
+        self.arrQuery[self.nElement]+=f"-[{cAlias}:{cRelationship}]->"
+        return self
+    
+    def As(self, cAlias:str):
+        self.arrQuery[self.nElement]+=f" AS {cAlias}"
+        return self
+    
+    @dispatch()
+    def Where(self):
+        self.nElement +=1
+        self.arrQuery[self.nElement]+=f"WHERE"
+        return self
+    
+    @dispatch(str,int)
+    def Id(self, cNode:str,IdNode:int):
+        self.arrQuery[self.nElement]+=f" ID({cNode})={IdNode}"
+        return self
+    
+    # @dispatch(str)
+    def And(self, cNode:str = ""):
+        self.arrQuery[self.nElement]+=", " if (cNode == "") else " AND "
+        return self
+    
+    @dispatch()
+    def With(self):
+        self.nElement +=1
+        self.arrQuery[self.nElement]+=f"WITH "
+        return self
+    
+    @dispatch(str)
+    def Node(self, cAlias:str):
+        self.arrQuery[self.nElement]+=f"({cAlias})"
+        return self
+    
+    @dispatch(str)
+    def Count(self, cAlias:str):
+        self.arrQuery[self.nElement]+=f" COUNT({cAlias})"
+        return self
+    
+    # @dispatch(str)
+    def OnArray(self, cNodeTo:str, cRelationship:str, cNodeFrom:str, IdNode:str=""):
+        IdNode = IdNode if IdNode != "" else cNodeFrom
+        self.arrQuery[self.nElement]+=f"[({cNodeTo})<-[:{cRelationship}]-({cNodeFrom}) | ID({IdNode})]"
+        return self
