@@ -39,4 +39,31 @@ WHERE cl2.cCode STARTS WITH substring(cl1.cCode, 0, 3)
 RETURN doc,cl2,recom limit 20
 
 -----------------------
-Implemetacion a construir
+Implemetacion de index - titlesAndDescriptions
+> CREATE FULLTEXT INDEX index_for_searchable FOR (n:Header|Person|Serial_Title|Publisher|Classification) ON EACH [n.index_at]
+> SHOW INDEXES
+
+
+----- Search Book --- 
+CALL db.index.fulltext.queryNodes('titlesAndDescriptions', 'quechua')
+        YIELD node MATCH (node)-[]->(doc:Title)
+with 
+        doc, 
+        COUNT(id(doc)) as coincidence
+MATCH (doc)<-[au:HAS_RESPONSIBILITY]-(peo:Person)
+WITH 
+        doc,
+        coincidence,   
+        apoc.coll.sortMulti(COLLECT ({cName:peo.cName, cSurname:peo.cSurname, cRole:au.cRole}), ['^cRole'])[0] AS pe
+RETURN         
+        id(doc) as idBook, 
+        doc.cTitle as cTitle, 
+        doc.cSubtitle as cSubtitle, 
+        doc.cTopics as cTopic,  
+        (doc.nReleased + ', '+doc.cEdition) as cRelease, 
+        doc.cImage as cImage,
+        (pe.cName+' '+pe.cSurname) as cAuthor, 
+        pe.cRole as cRole, 
+        doc.nViews as nViews        
+order by coincidence desc
+LIMIT 30

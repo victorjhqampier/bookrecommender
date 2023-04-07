@@ -59,3 +59,6 @@ class BookProgramability(IBook):
                 idTitle=objItem.idItem,
                 cTitle=objItem.cTitle
             ) 
+    
+    def SearchBook(self,cKeyWord) -> MergeBookResponseEntity:
+        return 0

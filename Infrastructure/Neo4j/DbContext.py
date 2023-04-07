@@ -105,7 +105,10 @@ class DbContext(IContext):
     
     @dispatch(str)
     def Where(self, cWhere:str):
-        self.arrQuery[1] = f"WHERE {cWhere}"
+        if(self.arrQuery[1] == ""):
+            self.arrQuery[1] = f"WHERE {cWhere}"
+        else:
+            self.arrQuery[self.nElement] += f" WHERE {cWhere}"
         return self
 
     def Select(self, cSelect:str):
@@ -114,13 +117,16 @@ class DbContext(IContext):
         return self
 
     def ToList(self):
+        self.arrQuery = [" ".join(query.split()).strip() for query in self.arrQuery]
         return self.__GraphObject.run(" ".join(self.arrQuery)).data()
 
     def FirstOrDefault(self):
+        self.arrQuery = [" ".join(query.split()).strip() for query in self.arrQuery]
         result = self.__GraphObject.run(" ".join(self.arrQuery)).data()
         return result[0] if len(result) > 0 else None
     
     def ToString(self):
+        self.arrQuery = [" ".join(query.split()).strip() for query in self.arrQuery]
         return " ".join(self.arrQuery)
     
 # nueva implementacion para consulta
@@ -164,7 +170,7 @@ class DbContext(IContext):
     
     # @dispatch(str)
     def And(self, cNode:str = ""):
-        self.arrQuery[self.nElement]+=", " if (cNode == "") else " AND "
+        self.arrQuery[self.nElement]+=", " if (cNode == "") else f" AND {cNode}"
         return self
     
     @dispatch()
@@ -175,7 +181,10 @@ class DbContext(IContext):
     
     @dispatch(str)
     def Node(self, cAlias:str):
-        self.arrQuery[self.nElement]+=f"({cAlias})"
+        if(self.arrQuery[self.nElement].strip()[-1]=="-" or self.arrQuery[self.nElement].strip()[-1]==">" or  self.arrQuery[self.nElement].strip()[-2]=="C" or self.arrQuery[self.nElement].strip()[-2]==")"):
+            self.arrQuery[self.nElement]+=f"({cAlias})"
+        else:
+            self.arrQuery[self.nElement]+=f"{cAlias}"
         return self
     
     @dispatch(str)
@@ -184,7 +193,41 @@ class DbContext(IContext):
         return self
     
     # @dispatch(str)
-    def OnArray(self, cNodeTo:str, cRelationship:str, cNodeFrom:str, IdNode:str=""):
+    def OnSet(self, cNodeTo:str, cRelationship:str, cNodeFrom:str, IdNode:str=""):
         IdNode = IdNode if IdNode != "" else cNodeFrom
         self.arrQuery[self.nElement]+=f"[({cNodeTo})<-[:{cRelationship}]-({cNodeFrom}) | ID({IdNode})]"
+        return self
+        
+    def FromRaw(self,cQuery:str):
+        self.arrQuery[self.nElement]+=cQuery
+        return self
+    
+    def StartWith(self, cStartWith:str=""):
+        self.arrQuery[self.nElement]+=f" STARTS WITH {cStartWith}"
+        return self
+    
+    def Substring(self, cNode:str, nLong:int):
+        self.arrQuery[self.nElement]+=f" SUBSTRING({cNode},0,{nLong})"
+        return self
+    
+    def OrderByDescending(self, cNode:str):        
+        cNode = ",".join([n + " DESC" for n in cNode.split(",")])
+        self.arrQuery[-1]+=f" ORDER BY {cNode}"
+        return self
+    
+    def Limit(self, nLimit:int):
+        self.arrQuery[-1]+=f" LIMIT {nLimit}"
+        return self
+        
+    def SearchByIndex(self,cKeyWord:str,cIndex:str):
+        self.nElement +=1
+        self.arrQuery[self.nElement]+=f"CALL db.index.fulltext.queryNodes('{cIndex}', '{cKeyWord}') YIELD node MATCH (node)-[]->"
+        return self
+    
+    def SortObjectCollect(self,cObject:str,cOrderBy:str):
+        self.arrQuery[self.nElement]+=f"apoc.coll.sortMulti(COLLECT ({cObject}), ['^{cOrderBy}'])[0] "
+        return self
+    
+    def CountId(self,cNode:str):
+        self.arrQuery[self.nElement]+=f"COUNT(id({cNode})) "
         return self

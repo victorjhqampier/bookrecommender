@@ -102,5 +102,37 @@ class IContext(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def OnArray(self, cNodeTo:str, cRelationship:str, cNodeFrom:str, IdNode:str):
+    def OnSet(self, cNodeTo:str, cRelationship:str, cNodeFrom:str, IdNode:str):
+        pass
+
+    @abstractmethod
+    def FromRaw(self,cQuery:str):
+        pass
+
+    @abstractmethod
+    def StartWith(self, cStartWith:str=""):
+        pass
+
+    @abstractmethod
+    def Substring(self, cNode:str, nLong:int):
+        pass
+
+    @abstractmethod
+    def OrderByDescending(self, cNode:str):
+        pass
+    
+    @abstractmethod
+    def Limit(self, nLimit:int):
+        pass
+
+    @abstractmethod
+    def SearchByIndex(self,cKeyWord:str,cIndex:str):
+        pass
+    
+    @abstractmethod
+    def SortObjectCollect(self,cObject:str,cOrderBy:str):
+        pass
+    
+    @abstractmethod
+    def CountId(self,cNode:str):
         pass
