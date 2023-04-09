@@ -32,6 +32,9 @@ from Infrastructure.Neo4j.Programmabilities.RecomMethod import RecomMethod
 EasyResponse: IEasyResponse = EasyResponseCommon()
 Helper: IHelper = HelperCommon()
 
+BookHandler: IBook = BookProgramability() # No Global yet
+objRecom:IRecomInfrastructure = RecomMethod()
+
 bookController = Blueprint("bookController", __name__)
 CORS(bookController)
 
@@ -61,9 +64,7 @@ def SaveMergeBook():
         arrCopies: list = []
         for item in arrInput["copy"]:
             Input: CopyDataEntity = FromBody(item, CopyDataEntity)
-            arrCopies.append(Input)
-
-        BookHandler: IBook = BookProgramability() # No Global yet
+            arrCopies.append(Input)        
         
         result = BookHandler.MergeBook(objItem, arrCopies, arrAuthors, arrPublisher, objclassification, objSerialTitle)
 
@@ -83,8 +84,6 @@ def SearchBook():
         cKeyWord = Helper.GenerateIndex(cKeyWord)
         if(len(cKeyWord) < 4):
             return StatusCode(200, EasyResponse.EasyEmptyRespond())
-        
-        objRecom:IRecomInfrastructure = RecomMethod()
 
         result:list = objRecom.SearchBook(cKeyWord)
         if(len(result) == 0):
@@ -99,7 +98,11 @@ def SearchBook():
 @jwt_required()
 def TrendsBook():
     try:
-        return StatusCode(200, EasyResponse.EasySuccessRespond('Todos los libros mas buscados'))
+        result:list = objRecom.GetTrends()
+        if(len(result) == 0):
+            return StatusCode(200, EasyResponse.EasyEmptyRespond())
+
+        return StatusCode(200, EasyResponse.EasySuccessRespond(result))
 
     except Exception as e:
         return StatusCode(500, EasyResponse.EasyErrorRespond("99", "Error general interno. " + str(e)))
@@ -108,8 +111,13 @@ def TrendsBook():
 @jwt_required()
 def GetBook():
     try:
-        idBook:str = request.get_json()["idBook"]
-        return StatusCode(200, EasyResponse.EasySuccessRespond(idBook))
+        idTitle:str = request.get_json()["idTitle"]
+        
+        result = BookHandler.GetBook(int(idTitle))
+        # if(len(result) == 0):
+        #     return StatusCode(200, EasyResponse.EasyEmptyRespond())
+        objRecom.UpdateViews(int(idTitle))
+        return StatusCode(200, EasyResponse.EasySuccessRespond(result))
 
     except Exception as e:
         return StatusCode(500, EasyResponse.EasyErrorRespond("99", "Error general interno. " + str(e)))

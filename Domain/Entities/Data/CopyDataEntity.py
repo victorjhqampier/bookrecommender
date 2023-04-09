@@ -5,7 +5,7 @@ from typing import Optional
 @dataclass
 class CopyDataEntity:
     idCopy:Optional[str]
-    cCode:Optional[str]
+    # cCode:Optional[str]
     cNotation:str
     cLibrary:str
     cLink:str

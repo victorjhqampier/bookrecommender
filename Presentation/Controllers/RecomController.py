@@ -21,6 +21,7 @@ from Infrastructure.Neo4j.Programmabilities.RecomMethod import RecomMethod
 #=======================================================================
 
 EasyResponse: IEasyResponse = EasyResponseCommon()
+objRecom:IRecomInfrastructure = RecomMethod()
 
 recomController = Blueprint("recomController", __name__)
 CORS(recomController)
@@ -31,7 +32,7 @@ def JaccardIndexRecom():
     try:
         idTitle:str = request.get_json()["idTitle"]
 
-        objRecom:IRecomInfrastructure = RecomMethod()
+        # objRecom:IRecomInfrastructure = RecomMethod()     
 
         result:list = objRecom.GetJaccardIndexRecom(int(idTitle))
         if(len(result) == 0):
@@ -48,7 +49,7 @@ def CoResponsibilityRecom():
     try:
         idTitle:str = request.get_json()["idTitle"]
 
-        objRecom:IRecomInfrastructure = RecomMethod()
+        # objRecom:IRecomInfrastructure = RecomMethod()
 
         result:list = objRecom.GetCoResponsibilityRecom(int(idTitle))
         if(len(result) == 0):
@@ -65,7 +66,7 @@ def ClassificationRecom():
     try:
         idTitle:str = request.get_json()["idTitle"]
 
-        objRecom:IRecomInfrastructure = RecomMethod()
+        # objRecom:IRecomInfrastructure = RecomMethod()
 
         result:list = objRecom.GetClassificationRecom(int(idTitle))
         if(len(result) == 0):

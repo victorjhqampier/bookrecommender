@@ -3,6 +3,10 @@ from abc import abstractmethod
 from Domain.Entities.Data.SerialTitlesDataEntity import SerialTitlesDataEntity
 
 class ISerialTitle(metaclass=ABCMeta):
-    @abstractmethod 
+    @abstractmethod
     def MergeSerialTitle(self, objSerialTitle: SerialTitlesDataEntity):
+        pass
+
+    @abstractmethod
+    def GetSerialTitle(self, idTitle:int)->SerialTitlesDataEntity:
         pass

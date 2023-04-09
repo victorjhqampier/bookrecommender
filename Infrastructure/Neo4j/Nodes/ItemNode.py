@@ -33,7 +33,7 @@ class ItemNode(IItem):
 
         cIdentity = self.__helper.GenerateIdentifier(f"{objItem.cIsbn} {objItem.cTitle} {objItem.cSubtitle} {objItem.cEdition} {objItem.nReleased} {objItem.cType} {cMoreDescription}")
         
-        cIndex = self.__helper.GenerateIndex(f'{objItem.cIsbn} {objItem.cTitle} {objItem.cSubtitle} {objItem.cEdition} {objItem.cContent} {objItem.cNotes} {objItem.cTopics} {objItem.cPhysicalDescription}')
+        cIndex = self.__helper.GenerateIndex(f'{objItem.cIsbn} {objItem.cTitle} {objItem.cSubtitle} {objItem.cEdition} {objItem.cContent} {objItem.cNotes} {objItem.cTopics}')
         arrNodeSaving.Merge(self.__cAlias,self.__cName, cIdentity
                 ).OnCreate(
                     {   
@@ -75,3 +75,13 @@ class ItemNode(IItem):
         
         objItem.idItem = result['idItem']
         return objItem
+    
+    def GetTitle(self, idTitle:int)->ItemDataEntity:
+        BuildToGetTitle= self.__db.Query()
+        BuildToGetTitle.Match(            
+            ).Node("Title","m"
+            ).Where(            
+                ).Id("m", idTitle           
+            ).Select("ID(m) AS idTitle,m.cTitle AS cTitle,m.cSubtitle AS cSubtitle,m.cEdition AS cEdition,m.nReleased AS nReleased,m.cContent AS cContent,m.cIsbn AS cIsbn,m.cNotes AS cNotes,m.cTopics AS cTopics,m.cType AS cType,m.cImage AS cImage,m.updated_at AS dUpdated")
+                    
+        return BuildToGetTitle.FirstOrDefault()

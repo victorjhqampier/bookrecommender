@@ -11,7 +11,7 @@ class DbContext(IContext):
     __GraphObject = Graph(f"{Neo4jEnum.DbPrefix}://{Neo4jEnum.DbHost}:{Neo4jEnum.DbPort}", auth=(f"{Neo4jEnum.DbUser}", f"{Neo4jEnum.DbPass}"))    
         
     def __init__(self):
-        self.arrQuery:list = ["","","","","",""]#1:query ; 2: Select : las FirstOrDefault()
+        self.arrQuery:list = ["","","","","","",""]#1:query ; 2: Select : las FirstOrDefault()
         self.cAlias:str = ""
         self.nElement:int=-1
 
@@ -113,7 +113,7 @@ class DbContext(IContext):
 
     def Select(self, cSelect:str):
         # self.arrQuery[5] = f"RETURN {cSelect}"
-        self.arrQuery[-1] = f"RETURN {cSelect}"
+        self.arrQuery[-1] += f" RETURN {cSelect}"
         return self
 
     def ToList(self):
@@ -230,4 +230,8 @@ class DbContext(IContext):
     
     def CountId(self,cNode:str):
         self.arrQuery[self.nElement]+=f"COUNT(id({cNode})) "
+        return self
+    
+    def UpdateField(self,cField:str, cValue:str):
+        self.arrQuery[self.nElement]+=f" SET {cField}={cValue} "
         return self

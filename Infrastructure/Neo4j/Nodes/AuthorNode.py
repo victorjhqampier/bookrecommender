@@ -1,4 +1,5 @@
 from Domain.Common.CryptographyCommon import CryptographyCommon
+from Domain.Entities.Data.AuthorDataEntity import AuthorDataEntity
 from Domain.Enums.NodeEnum import NodeEnum
 from Domain.Interfaces.IAuthor import IAuthor
 from Domain.Interfaces.IContext import IContext
@@ -49,11 +50,25 @@ class AuthorNode(IAuthor):
                     {                        
                         "updated_at":str(datetime.now())
                     }
-                ).Select(f"[{','.join(arrSelect)}] AS idAuthor")
+                )#.Select(f"[{','.join(arrSelect)}] AS idAuthor")
             nContador += 1
+        arrNodeSaving.Select(f"[{','.join(arrSelect)}] AS idAuthor")
         result = arrNodeSaving.FirstOrDefault()
+        
         nContador = 0
         for item in arrAuthor:
             item.idAuthor = str(result["idAuthor"][nContador])
             nContador += 1
         return arrAuthor
+
+    def GetAuthor(self, idTitle:int)->list[AuthorDataEntity]:
+        BuildToGetAuthor= self.__db.Query()
+        BuildToGetAuthor.Match(            
+            ).Node("Title","m"
+                ).LeftRelationship("HAS_RESPONSIBILITY","au"
+            ).Node("Person","pe"
+            ).Where(            
+                ).Id("m", idTitle
+            ).Select("ID(pe) AS idAuthor, pe.cName AS cName, pe.cSurname AS cSurname, pe.cPlace AS cPlace, au.cRole AS cRole")            
+                
+        return BuildToGetAuthor.ToList()

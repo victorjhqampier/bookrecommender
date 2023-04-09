@@ -46,3 +46,15 @@ class SerialTitleNode(ISerialTitle):
         objSerialTitle.idSerialTitle = result['idSerialTitle']
 
         return objSerialTitle
+    
+    def GetSerialTitle(self, idTitle:int)->SerialTitlesDataEntity:
+        BuildToGetSerialTitle= self.__db.Query()
+        BuildToGetSerialTitle.Match(            
+            ).Node("Title","m"
+                ).LeftRelationship("PART_TO","pt"
+            ).Node("Serial_Title","st"
+            ).Where(            
+                ).Id("m", idTitle
+            ).Select("ID(st) AS idSerialTitle, st.cTitle AS cTitle, pt.cNumber AS cNumber")         
+                
+        return BuildToGetSerialTitle.FirstOrDefault()

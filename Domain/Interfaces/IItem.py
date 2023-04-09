@@ -9,3 +9,7 @@ class IItem(metaclass=ABCMeta):
     @abstractmethod
     def CreateItem(self, objItem: ItemDataEntity,cMoreDescription:str = ""):
         pass
+
+    @abstractmethod
+    def GetTitle(self, idTitle:int)->ItemDataEntity:
+        pass

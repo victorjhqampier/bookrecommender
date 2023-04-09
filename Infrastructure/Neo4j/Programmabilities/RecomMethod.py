@@ -23,7 +23,7 @@ class RecomMethod(IRecomInfrastructure):
                 ).Node("doc"
                 ).And().Node("coincidence"
                 ).And().SortObjectCollect("{cName:peo.cName, cSurname:peo.cSurname, cRole:au.cRole}","cRole").As("pe"
-            ).Select("ID(doc) as idTitle,doc.cTitle as cTitle,doc.cSubtitle as cSubtitle,doc.cTopics as cTopic,(doc.nReleased + ', '+doc.cEdition) as cRelease,doc.cImage as cImage,(pe.cName+' '+pe.cSurname) as cAuthor,pe.cRole as cRole, doc.nViews as nViews"                                                                                            
+            ).Select("ID(doc) as idTitle,doc.cTitle as cTitle,doc.cSubtitle as cSubtitle,doc.cTopics as cTopic,(doc.nReleased + ' '+doc.cEdition) as cRelease,doc.cImage as cImage,(pe.cName+' '+pe.cSurname) as cAuthor,pe.cRole as cRole, doc.nViews as nViews"                                                                                            
             ).OrderByDescending("coincidence"
             ).Limit(30)
         
@@ -53,7 +53,13 @@ class RecomMethod(IRecomInfrastructure):
                 ).Node("recom"
                 ).And().FromRaw("((1.0 * intersection) / SIZE(union))").As("jaccard"
                 ).Where("jaccard > 0.16"
-            ).Select("recom.cTitle, jaccard"
+            ).Match(# View only         
+                ).Node("recom").LeftRelationship("HAS_RESPONSIBILITY","res").Node("per"
+            ).With(
+                ).Node("recom"
+                ).And().Node("jaccard"
+                ).And().SortObjectCollect("{cName:per.cName, cSurname:per.cSurname, cRole:res.cRole}","cRole").As("author"
+            ).Select("ID(recom) as idTitle,recom.cTitle as cTitle,recom.cSubtitle as cSubtitle,recom.cTopics as cTopic,(recom.nReleased + ' '+recom.cEdition) as cRelease,recom.cImage as cImage,(author.cName+' '+author.cSurname) as cAuthor,author.cRole as cRole, recom.nViews as nViews"
             ).OrderByDescending("jaccard,recom.nViews"
             ).Limit(10)
         
@@ -67,7 +73,7 @@ class RecomMethod(IRecomInfrastructure):
             ).Node("person"
                 ).RightRelationship("HAS_RESPONSIBILITY"
             ).Node("Title","other"
-            ).And(            
+                ).And(            
             ).Node("other"
                 ).LeftRelationship("HAS_RESPONSIBILITY"
             ).Node("co"
@@ -75,9 +81,14 @@ class RecomMethod(IRecomInfrastructure):
             ).Node("Title","recom"
             ).Where(   
                 ).Id("m", idTitle).And("m <> recom"
-            ).Select("recom.cTitle as cTitle, recom.cSubtitle as cSubtitle"
+            ).Match(# View only         
+                ).Node("recom").LeftRelationship("HAS_RESPONSIBILITY","res").Node("per"
+            ).With(
+                ).Node("recom"
+                ).And().SortObjectCollect("{cName:per.cName, cSurname:per.cSurname, cRole:res.cRole}","cRole").As("author"
+            ).Select("ID(recom) as idTitle,recom.cTitle as cTitle,recom.cSubtitle as cSubtitle,recom.cTopics as cTopic,(recom.nReleased + ' '+recom.cEdition) as cRelease,recom.cImage as cImage,(author.cName+' '+author.cSurname) as cAuthor,author.cRole as cRole, recom.nViews as nViews"
             ).OrderByDescending("recom.nViews"
-            ).Limit(10)        
+            ).Limit(10)
         
         return BuildRecomByCoResponsibility.ToList()
     
@@ -94,8 +105,41 @@ class RecomMethod(IRecomInfrastructure):
                     ).RightRelationship("ASSIGN_DEWEY"
                 ).Node("recom"
                 ).Where("cl2.cCode").StartWith().Substring("cl1.cCode",2
-            ).Select("recom.cTitle as cTitle, recom.cSubtitle as cSubtitle"
+            ).Match(# View only         
+                ).Node("recom").LeftRelationship("HAS_RESPONSIBILITY","res").Node("per"
+            ).With(
+                ).Node("recom"
+                ).And().Node("cl2"
+                ).And().SortObjectCollect("{cName:per.cName, cSurname:per.cSurname, cRole:res.cRole}","cRole").As("author"
+            ).Select("ID(recom) as idTitle,recom.cTitle as cTitle,recom.cSubtitle as cSubtitle,recom.cTopics as cTopic,(recom.nReleased + ' '+recom.cEdition) as cRelease,recom.cImage as cImage,(author.cName+' '+author.cSurname) as cAuthor,author.cRole as cRole, recom.nViews as nViews"
             ).OrderByDescending("cl2.cCode,recom.nViews"
             ).Limit(10)
         
         return BuildRecomByClassification.ToList()
+    
+    def GetTrends(self):
+        BuildForTrends= self.__db.Query()
+        BuildForTrends.Match(            
+            ).Node("Title","recom"                
+            ).Where("recom.nViews <> 0 "
+            ).Match(# View only         
+                ).Node("recom").LeftRelationship("HAS_RESPONSIBILITY","res").Node("per"
+            ).With(
+                ).Node("recom"
+                ).And().SortObjectCollect("{cName:per.cName, cSurname:per.cSurname, cRole:res.cRole}","cRole").As("author"
+            ).Select("ID(recom) as idTitle,recom.cTitle as cTitle,recom.cSubtitle as cSubtitle,recom.cTopics as cTopic,(recom.nReleased + ' '+recom.cEdition) as cRelease,recom.cImage as cImage,(author.cName+' '+author.cSurname) as cAuthor,author.cRole as cRole, recom.nViews as nViews"
+            ).OrderByDescending("recom.nViews"
+            ).Limit(30)
+        
+        return BuildForTrends.ToList()
+
+    def UpdateViews(self,idTitle:int):
+        BuildUpdateViews = self.__db.Query()
+        BuildUpdateViews.Match(            
+            ).Node("Title","m"
+            ).Where(            
+                ).Id("m", idTitle
+            ).UpdateField("m.nViews","(m.nViews + 1)"
+            ).Select("true as lSuccess")
+        return BuildUpdateViews.FirstOrDefault()
+        

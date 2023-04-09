@@ -4,7 +4,7 @@ from typing import Optional
 
 @dataclass
 class ItemDataEntity:
-    idItem:Optional[str]
+    idTitle:Optional[str]
     cTitle:str
     cSubtitle:str
     cEdition:str
@@ -12,8 +12,9 @@ class ItemDataEntity:
     cContent:str
     cIsbn:str
     cNotes:str
-    cPhysicalDescription:Optional[str]
+    # cPhysicalDescription:Optional[str]
     cTopics:str
     cType:str
     cImage:str
-    cLink:Optional[str]
+    dUpdated:Optional[datetime]
+    # cLink:Optional[str]

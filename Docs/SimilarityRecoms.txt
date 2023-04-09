@@ -1,8 +1,6 @@
-Dos Consultas igual
-
 ---- Mas eficiente ----- 4ms
 MATCH (m:Title)<-[:HAS_RESPONSIBILITY|ASSIGN_DEWEY|PUBLISHED|PART_TO]-(t)-[:HAS_RESPONSIBILITY|ASSIGN_DEWEY|PUBLISHED|PART_TO]->(recom:Title)
-WHERE id(m) = 913
+        WHERE id(m) = 913
 WITH    m, 
         recom, 
         count(t) AS intersection,
@@ -11,10 +9,43 @@ WITH    m,
 WITH recom,intersection, s1 + [x IN s2 WHERE NOT x IN s1] AS union
 WITH recom, ((1.0*intersection)/size(union)) AS jaccard WHERE jaccard > 0.16
 RETURN recom.cTitle, jaccard
-RETURN ((1.0*intersection)/size(union)) AS jaccard, m.cTitle, recom.cTitle
 
-
-
+=================== Completo =======================
+----------------------------------------------------
+MATCH 
+	(m:Title)<-[:HAS_RESPONSIBILITY|ASSIGN_DEWEY|PUBLISHED|PART_TO]-(t)-[:HAS_RESPONSIBILITY|ASSIGN_DEWEY|PUBLISHED|PART_TO]->(recom:Title) 
+	WHERE ID(m)=322 
+WITH 
+	m,
+	recom,
+	COUNT(t) AS intersection,
+	[(m)<-[:HAS_RESPONSIBILITY|ASSIGN_DEWEY|PUBLISHED|PART_TO]-(mt) | ID(mt)] AS neighbors_m,
+	[(recom)<-[:HAS_RESPONSIBILITY|ASSIGN_DEWEY|PUBLISHED|PART_TO]-(recomt) | ID(recomt)] AS neighbors_recom 
+WITH 
+	recom,
+	intersection,
+	neighbors_m + [x IN neighbors_recom WHERE NOT x IN neighbors_m] AS union WITH recom,
+	((1.0 * intersection) / SIZE(union)) AS jaccard 
+		WHERE jaccard > 0.16 
+MATCH (recom)<-[res:HAS_RESPONSIBILITY]-(per) 
+WITH 
+	recom,
+	jaccard,
+	apoc.coll.sortMulti(COLLECT ({cName:per.cName,cSurname:per.cSurname,cRole:res.cRole}),['^cRole'])[0] AS author 
+RETURN 
+	ID(recom) as idTitle,
+	recom.cTitle as cTitle,
+	recom.cSubtitle as cSubtitle,
+	recom.cTopics as cTopic,
+	(recom.nReleased + ' '+recom.cEdition) as cRelease,
+	recom.cImage as cImage,
+	(author.cName+' '+author.cSurname) as cAuthor,
+	author.cRole as cRole,
+	recom.nViews as nViews 
+ORDER BY jaccard DESC, recom.nViews DESC 
+LIMIT 10
+--------------------------------------------------------------------------------------
+======================================================================================
 ----- Menos Eficiente ----- 184 ms
 MATCH (m:Title)<-[:HAS_RESPONSIBILITY|ASSIGN_DEWEY|PUBLISHED|PART_TO]-(t)-[:HAS_RESPONSIBILITY|ASSIGN_DEWEY|PUBLISHED|PART_TO]->(other:Title)
 WHERE id(m) = 913 and id(other) = 1682
@@ -25,11 +56,37 @@ MATCH (other)<-[:HAS_RESPONSIBILITY|ASSIGN_DEWEY|PUBLISHED|PART_TO]-(ot)
 WITH other,intersection,i, s1, COLLECT(id(ot)) AS s2
 WITH other,intersection, s1 + [x IN s2 WHERE NOT x IN s1] AS union
 RETURN other.cTitle as titulo, ((1.0*intersection)/SIZE(union)) AS jaccard, other.id
+--------------------================================================================================================-------------------------------------
 
--------- por Coautores ----------
+------------------------------------------ por Coautores -----------------------------------------------
 MATCH (m:Title)<-[:HAS_RESPONSIBILITY]-(peo)-[:HAS_RESPONSIBILITY]->(other:Title), (other)<-[:HAS_RESPONSIBILITY]-(co)-[au:HAS_RESPONSIBILITY]->(recom:Title)
 WHERE ID(m)=65 AND m <> recom
 return m,peo,other,co,recom limit 30
+
+======================================== Complet ==================================
+MATCH 
+	(m:Title)<-[:HAS_RESPONSIBILITY]-(person)-[:HAS_RESPONSIBILITY]->(other:Title), 
+	(other)<-[:HAS_RESPONSIBILITY]-(co)-[:HAS_RESPONSIBILITY]->(recom:Title) 
+WHERE ID(m)=1198 AND m <> recom 
+MATCH 
+	(recom)<-[res:HAS_RESPONSIBILITY]-(per) 
+WITH 
+	recom, 
+	apoc.coll.sortMulti(COLLECT ({cName:per.cName, cSurname:per.cSurname, cRole:res.cRole}), ['^cRole'])[0] AS author
+RETURN 
+	ID(recom) as idTitle,
+	recom.cTitle as cTitle,
+	recom.cSubtitle as cSubtitle,
+	recom.cTopics as cTopic,
+	(recom.nReleased + ' '+recom.cEdition) as cRelease,
+	recom.cImage as cImage,
+	(author.cName+' '+author.cSurname) as cAuthor,
+	author.cRole as cRole, 
+	recom.nViews as nViews 
+ORDER BY recom.nViews DESC 
+LIMIT 10
+=====================================================================================
+-----------------------------------------------------------------------------------------------------------
 
 ---- por Classification ---
 MATCH (doc:Title)<-[:ASSIGN_DEWEY]-(cl1:Classification) 
@@ -38,13 +95,40 @@ MATCH (cl2:Classification)-[:ASSIGN_DEWEY]->(recom)
 WHERE cl2.cCode STARTS WITH substring(cl1.cCode, 0, 3)
 RETURN doc,cl2,recom limit 20
 
------------------------
+================================= complet =============================
+MATCH 
+	(m:Title)<-[:ASSIGN_DEWEY]-(cl1:Classification) 
+WHERE ID(m)=1198 
+MATCH 
+	(cl2:Classification)-[:ASSIGN_DEWEY]->(recom) 
+WHERE 
+	cl2.cCode STARTS WITH SUBSTRING(cl1.cCode,0,2) 
+MATCH 
+	(recom)<-[res:HAS_RESPONSIBILITY]-(per) 
+WITH 
+	recom, 
+	cl2, 
+	apoc.coll.sortMulti(COLLECT ({cName:per.cName, cSurname:per.cSurname, cRole:res.cRole}), ['^cRole'])[0] AS author  
+RETURN 
+	ID(recom) as idTitle,
+	recom.cTitle as cTitle,
+	recom.cSubtitle as cSubtitle,
+	recom.cTopics as cTopic,
+	(recom.nReleased + ' '+recom.cEdition) as cRelease,
+	recom.cImage as cImage,
+	(author.cName+' '+author.cSurname) as cAuthor,
+	author.cRole as cRole, 
+	recom.nViews as nViews 
+ORDER BY cl2.cCode DESC,recom.nViews 
+DESC LIMIT 10
+=======================================================================
+
+----------------------- create index ------------------------------------------
 Implemetacion de index - titlesAndDescriptions
 > CREATE FULLTEXT INDEX index_for_searchable FOR (n:Header|Person|Serial_Title|Publisher|Classification) ON EACH [n.index_at]
 > SHOW INDEXES
 
-
------ Search Book --- 
+----------------- Search Book -------------- 
 CALL db.index.fulltext.queryNodes('titlesAndDescriptions', 'quechua')
         YIELD node MATCH (node)-[]->(doc:Title)
 with 

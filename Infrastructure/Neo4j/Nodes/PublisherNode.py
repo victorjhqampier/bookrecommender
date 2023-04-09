@@ -1,4 +1,5 @@
 from Domain.Common.CryptographyCommon import CryptographyCommon
+from Domain.Entities.Data.PublisherDataEntity import PublisherDataEntity
 from Domain.Enums.NodeEnum import NodeEnum
 from Domain.Interfaces.IContext import IContext
 from Domain.Interfaces.ICryptography import ICryptography
@@ -49,9 +50,9 @@ class PublisherNode(IPublisher):
                 {
                     "updated_at": str(datetime.now())
                 }
-            ).Select(f"[{','.join(arrSelect)}] AS idPublisher")
+            )#.Select(f"[{','.join(arrSelect)}] AS idPublisher")
             nContador += 1
-            
+        arrNodeSaving.Select(f"[{','.join(arrSelect)}] AS idPublisher")
         result = arrNodeSaving.FirstOrDefault()
 
         nContador = 0
@@ -59,3 +60,15 @@ class PublisherNode(IPublisher):
             item.idPublisher = str(result["idPublisher"][nContador])
             nContador += 1
         return arrPublisher
+    
+    def GetPublisher(self, idTitle:int)->list[PublisherDataEntity]:
+        BuildToGetPublisher= self.__db.Query()
+        BuildToGetPublisher.Match(            
+            ).Node("Title","m"
+                ).LeftRelationship("PUBLISHED"
+            ).Node("Publisher","pu"
+            ).Where(            
+                ).Id("m", idTitle
+            ).Select("ID(pu) AS idPublisher, pu.cName AS cName, pu.cPlace AS cPlace")            
+                
+        return BuildToGetPublisher.ToList()

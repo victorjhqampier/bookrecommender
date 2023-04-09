@@ -1,7 +1,10 @@
+from Domain.Entities.Data.AuthorDataEntity import AuthorDataEntity
 from Domain.Entities.Data.ClassificationDataEntity import ClassificationDataEntity
+from Domain.Entities.Data.CopyDataEntity import CopyDataEntity
 from Domain.Entities.Data.ItemDataEntity import ItemDataEntity
 from Domain.Entities.Data.PublisherDataEntity import PublisherDataEntity
 from Domain.Entities.Data.SerialTitlesDataEntity import SerialTitlesDataEntity
+from Domain.Entities.Data.TitleResponseEntity import TitleResponseEntity
 from Domain.Entities.Request.MergeBookResponseEntity import MergeBookResponseEntity
 from Domain.Interfaces.IAllRelationship import IAllRelationship
 from Domain.Interfaces.IAuthor import IAuthor
@@ -60,5 +63,22 @@ class BookProgramability(IBook):
                 cTitle=objItem.cTitle
             ) 
     
-    def SearchBook(self,cKeyWord) -> MergeBookResponseEntity:
-        return 0
+    def GetBook(self,idTitle:int) -> TitleResponseEntity:
+        objTitle:ItemDataEntity = self.__Item.GetTitle(idTitle)
+
+        if objTitle is None:
+            return None
+        
+        objClassification:ClassificationDataEntity = self.__Classification.GetClassification(idTitle)
+        objAuthor:list[AuthorDataEntity] = self.__Autor.GetAuthor(idTitle)
+        objPublisher:list[PublisherDataEntity] = self.__Publisher.GetPublisher(idTitle)
+        objSerialTitle:SerialTitlesDataEntity = self.__SerialTitle.GetSerialTitle(idTitle)
+        objCopy:list[CopyDataEntity] = self.__Copy.GetCopy(idTitle) 
+        
+        return {
+            "title":objTitle,
+            "classification":objClassification,
+            "person":objAuthor,
+            "publisher":objPublisher,
+            "serialTitle":objSerialTitle,
+            "copy":objCopy}

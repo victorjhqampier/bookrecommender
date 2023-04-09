@@ -1,3 +1,4 @@
+from Domain.Entities.Data.CopyDataEntity import CopyDataEntity
 from Domain.Enums.NodeEnum import NodeEnum
 from Domain.Interfaces.IContext import IContext
 from Domain.Interfaces.ICopy import ICopy
@@ -25,7 +26,7 @@ class CopyNode(ICopy):
         result:list =[]
 
         for item in arrCopies:
-            if(item.cCode == ''):
+            if(item.cNotation == ''):
                 raise Exception("CNombre no puede estar vacio.")
 
             arrAlias.append(self.__cAlias + str(nContador))
@@ -47,12 +48,26 @@ class CopyNode(ICopy):
                     {                        
                         "updated_at":str(datetime.now())
                     }
-                ).Select(f"[{','.join(arrSelect)}] AS idCopy")
+                )#.Select(f"[{','.join(arrSelect)}] AS idCopy")
             nContador += 1
 
+        arrNodeSaving.Select(f"[{','.join(arrSelect)}] AS idCopy")
         result = arrNodeSaving.FirstOrDefault()
+        
         nContador = 0
         for item in arrCopies:
             item.idCopy = str(result["idCopy"][nContador])
             nContador += 1
         return arrCopies
+
+    def GetCopy(self, idTitle:int)->list[CopyDataEntity]:
+        BuildToGetCopy= self.__db.Query()
+        BuildToGetCopy.Match(            
+            ).Node("Title","m"
+                ).RightRelationship("HAS_COPY"
+            ).Node("Copy","co"
+            ).Where(            
+                ).Id("m", idTitle
+            ).Select("ID(co) AS idCopy, co.cNotation AS cNotation, co.cLibrary AS cLibrary, co.cLink AS cLink")            
+                
+        return BuildToGetCopy.ToList()

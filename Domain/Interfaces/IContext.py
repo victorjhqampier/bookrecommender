@@ -136,3 +136,7 @@ class IContext(metaclass=ABCMeta):
     @abstractmethod
     def CountId(self,cNode:str):
         pass
+
+    @abstractmethod
+    def UpdateField(self,cField:str, cValue:str):
+        pass

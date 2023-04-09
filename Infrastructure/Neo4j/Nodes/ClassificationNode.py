@@ -45,3 +45,15 @@ class ClassificationNode(IClassification):
         result = arrNodeSaving.FirstOrDefault()
         objClassification.idClassification = result['idClassification']
         return objClassification
+
+    def GetClassification(self, idTitle:int)->ClassificationDataEntity:
+        BuildToGetTitle= self.__db.Query()
+        BuildToGetTitle.Match(            
+            ).Node("Title","m"
+                ).LeftRelationship("ASSIGN_DEWEY"
+            ).Node("Classification","cla"
+            ).Where(            
+                ).Id("m", idTitle
+            ).Select("ID(cla) AS idClassification, cla.cCode AS cCode, cla.cDescription AS cDescription")
+                
+        return BuildToGetTitle.FirstOrDefault()
