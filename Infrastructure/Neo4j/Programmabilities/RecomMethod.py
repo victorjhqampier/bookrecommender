@@ -104,7 +104,7 @@ class RecomMethod(IRecomInfrastructure):
                 ).Node("Classification","cl2"
                     ).RightRelationship("ASSIGN_DEWEY"
                 ).Node("recom"
-                ).Where("cl2.cCode").StartWith().Substring("cl1.cCode",2
+            ).Where("cl2.cCode").StartWith().Substring("cl1.cCode",2).And("m <> recom"
             ).Match(# View only         
                 ).Node("recom").LeftRelationship("HAS_RESPONSIBILITY","res").Node("per"
             ).With(
