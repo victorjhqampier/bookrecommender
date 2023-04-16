@@ -36,13 +36,5 @@ class TestMethod():
             ).OrderByDescending("coincidence"
             ).Limit(30)
         
-        return BuildRecomByClassification.ToList()
-        # Words=["a","con","de","al","e","en", "ademas","tal","sus","el","entre","sido","asi","desde","ella","ello","del","es","estas","sin","esto","han","estos","esta","este","ha","pe","com","como","he","la","las","los","les","mas","mi","me","muy","no","o","para","por","que","se","si","son","su","tu","un","una","y","ya","yo","tus","tu","te","lo"]
-        # cString = "La ñoña piñata, de José Cañada, está en la piñateria. La película 'Los niños del barrio' se proyectará en el teatro mañana a las 8:00 PM. El código secreto es 'GK#&%c4tY' y debe ingresarse en el formulario en línea. ¿Puedes adivinar la respuesta a 2+2 sin usar una calculadora?" 
-        
-        # # cString = normalize("NFD", cString.lower())
-        # # cString = re.sub( r"([^n\u0300-\u036f]|n(?!\u0303(?![\u0300-\u036f])))[\u0300-\u036f]+", r"\1",normalize( "NFD", cString.lower()), 0, re.I)
-        # # arrTemp = [x for x in cString.split(" ") if x not in Words and len(x) > 2]
-        # # cString = ''.join([char for char in " ".join(arrTemp) if char.isalnum()])
-        # # return cString
-        # return self.__helper.GenerateIdentifier(cString)
+        return self.__helper.GenerateIndex("desde entré https://google.com.pe Nándúü,545 los' goes más ál Álvaradö {:mamá:} así me gusta caxi")
+        #return BuildRecomByClassification.ToList()
