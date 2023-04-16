@@ -4,13 +4,13 @@ from abc import abstractmethod
 class IHelper(metaclass=ABCMeta):
 
     @abstractmethod
-    def GenerateIdentifier(self, cString:str):
+    def GenerateIdentifier(self, cString:str)->str:
         pass
 
     @abstractmethod
-    def GenerateIndex(self, cString:str):
+    def GenerateIndex(self, cString:str)->str:
         pass
 
     @abstractmethod
-    def FormateText(self, cString:str):
+    def FormateText(self, cString:str)-> str:
         pass

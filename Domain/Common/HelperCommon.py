@@ -8,7 +8,7 @@ class HelperCommon(IHelper):
     def __init__(self):
         pass   
 
-    def GenerateIdentifier(self, cString:str):
+    def GenerateIdentifier(self, cString:str)->str:
         cString = normalize("NFD", cString.lower())
         cString = ''.join([char for char in cString if char.isalnum() or char.isspace()])
         #cString = re.sub(r"([^n\u0300-\u036f]|n(?!\u0303(?![\u0300-\u036f])))[\u0300-\u036f]+", r"\1", cString, 0, re.I)
@@ -17,14 +17,14 @@ class HelperCommon(IHelper):
         objHash = hashlib.sha256(arrBytes)
         return objHash.hexdigest()
 
-    def GenerateIndex(self, cString:str):
+    def GenerateIndex(self, cString:str)->str:
         cString = normalize("NFD", cString.lower())
         cString = ''.join(char for char in cString if char.isalnum() or char.isspace())
         arrWords = cString.split()
         arrWords = [word for word in arrWords if word not in self.__StopWords and len(word) > 1]
         return " ".join(sorted(arrWords)).strip()
 
-    def FormateText(self, cString:str):
+    def FormateText(self, cString:str)->str:
         if(cString == ""):
             return ""
         return " ".join(cString.split())
