@@ -36,5 +36,5 @@ class TestMethod():
             ).OrderByDescending("coincidence"
             ).Limit(30)
         
-        return self.__helper.GenerateIndex("desde entré https://google.com.pe Nándúü,545 los' goes más ál Álvaradö {:mamá:} así me gusta caxi")
+        return self.__helper.GenerateIndex("Teoría local de curvas -- Superficies regulares y sus propiedades -- Aplicación normal de Gauss")
         #return BuildRecomByClassification.ToList()
