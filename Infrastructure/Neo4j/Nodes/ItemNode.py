@@ -31,9 +31,9 @@ class ItemNode(IItem):
         if(objItem.cTitle == ''):
             raise Exception("cTitle no puede estar vacio.")
 
-        cIdentity = self.__helper.GenerateIdentifier(f"{objItem.cIsbn} {objItem.cTitle} {objItem.cSubtitle} {objItem.cEdition} {objItem.nReleased} {objItem.cType} {cMoreDescription}")
+        cIdentity = self.__helper.GenerateIdentifier(f"{objItem.cIsbn} {objItem.cTitle} {objItem.cSubtitle} {objItem.cEdition} {objItem.nReleased} {cMoreDescription}")
         
-        cIndex = self.__helper.GenerateIndex(f'{objItem.cIsbn} {objItem.cTitle} {objItem.cSubtitle} {objItem.cEdition} {objItem.cContent} {objItem.cNotes} {objItem.cTopics}')
+        cIndex = self.__helper.GenerateIndex(f'{objItem.cIsbn} {objItem.cTitle} {objItem.cSubtitle} {objItem.nReleased} {objItem.cContent} {objItem.cNotes} {objItem.cTopics}')
         arrNodeSaving.Merge(self.__cAlias,self.__cName, cIdentity
                 ).OnCreate(
                     {   

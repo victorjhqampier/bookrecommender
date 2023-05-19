@@ -36,5 +36,5 @@ class TestMethod():
             ).OrderByDescending("coincidence"
             ).Limit(30)
         
-        return self.__helper.GenerateIndex("Teoría local de curvas -- Superficies regulares y sus propiedades -- Aplicación normal de Gauss")
+        return self.__helper.GenerateIndex("Introducción -- Datasets -- Regresión -- Clasificación -- Clustering -- Reducción de dimensiones -- Redes neuronales -- Clasificación usando redes neuronales -- Redes convolucionales -- Clasificacion usando redes convolucionales en datasets sencillos -- Generadores de datos -- Enriquecimiento de datos (dataaugmentation) -- Visualización de las capas ocultas -- Aprendizaje por transferencia (transfer learning) -- Autoencoders --Aprendizaje generativo.")
         #return BuildRecomByClassification.ToList()

@@ -25,6 +25,6 @@ class HelperCommon(IHelper):
         return " ".join(sorted(arrWords)).strip()
 
     def FormateText(self, cString:str)->str:
-        if(cString == ""):
+        if(cString.strip() == ""):
             return ""
-        return " ".join(cString.split())
+        return " ".join(cString.split()).strip()
