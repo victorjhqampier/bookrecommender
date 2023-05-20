@@ -126,6 +126,7 @@ DESC LIMIT 10
 ----------------------- create index ------------------------------------------
 Implemetacion de index - titlesAndDescriptions
 > CREATE FULLTEXT INDEX index_for_searchable FOR (n:Header|Person|Serial_Title|Publisher|Classification) ON EACH [n.index_at]
+> CREATE FULLTEXT INDEX titlesAndDescriptions FOR (n:Header|Person|Serial_Title|Publisher|Classification) ON EACH [n.index_at]
 > SHOW INDEXES
 
 ----------------- Search Book -------------- 
