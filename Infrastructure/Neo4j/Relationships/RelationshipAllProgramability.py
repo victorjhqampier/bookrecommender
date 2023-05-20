@@ -25,7 +25,7 @@ class RelationshipAllProgramability(IAllRelationship):
             NewRelation.Merge(idItem, RelationShipEnum.ItemToCopy, int(item.idCopy))
         
         for item in arrAuthors:
-            NewRelation.Merge(int(item.idAuthor), RelationShipEnum.ResponsibleToItem, idItem,("cRole",item.cRole))
+            NewRelation.Merge(int(item.idAuthor), RelationShipEnum.ResponsibleToItem, idItem,("cRole",item.cRole.replace(" ","\t")))
         
         for item in arrPublisher:
             NewRelation.Merge(int(item.idPublisher), RelationShipEnum.publisherToItem, idItem)
@@ -33,7 +33,7 @@ class RelationshipAllProgramability(IAllRelationship):
         NewRelation.Merge(int(objClass.idClassification), RelationShipEnum.ClassificationToItem, idItem)
 
         if int(objSerial.idSerialTitle) != 0:
-            NewRelation.Merge(int(objSerial.idSerialTitle), RelationShipEnum.SerialTitleToItem, idItem, ("cNumber",objSerial.cNumber))
+            NewRelation.Merge(int(objSerial.idSerialTitle), RelationShipEnum.SerialTitleToItem, idItem, ("cNumber",objSerial.cNumber.replace(" ","\t")))
 
         NewRelation.Select("TRUE AS idRelationship").FirstOrDefault()
         return
