@@ -36,10 +36,8 @@ CORS(authenticationController)
 # @cross_origin
 @authenticationController.route("/login", methods=["POST"])
 def IniciarSesion():
-    JsonInput = None
     try:
-        JsonInput = request.get_json()
-        inputBody = FromBody(JsonInput, AuthRequestEntity)
+        inputBody = FromBody(request.get_json(), AuthRequestEntity)
         idUsuario:int = Authentication.IniciarSesion(inputBody.cUser,inputBody.cPassword)
 
         if idUsuario == 0:
@@ -54,7 +52,7 @@ def IniciarSesion():
         return StatusCode(200,EasyResponse.EasySuccessRespond(newObjToken))
     
     except Exception as ex:
-        Logger.error("authenticationController /login : %s, WITH INPUT %s", str(ex), str(JsonInput))
+        Logger.error("authenticationController /login : [ERROR][%s] WITH INPUT %s", str(ex), str(request.get_json()))
         return StatusCode(500,EasyResponse.EasyErrorRespond("99","Error general interno. " + str(ex)))
 
 #Para verificar
