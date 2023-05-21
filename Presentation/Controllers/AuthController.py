@@ -13,6 +13,7 @@ from datetime import timedelta
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
+import logging
 
 #=======================================================================
 #   © Victor JCaxi - All rights reserved
@@ -27,6 +28,7 @@ from flask_jwt_extended import jwt_required
 
 EasyResponse:IEasyResponse = EasyResponseCommon()
 Authentication:IAutenticacion = AutenticacionDatabase()
+Logger = logging.getLogger(__name__)
 
 authenticationController = Blueprint("authenticationController",__name__)
 CORS(authenticationController)
@@ -34,8 +36,10 @@ CORS(authenticationController)
 # @cross_origin
 @authenticationController.route("/login", methods=["POST"])
 def IniciarSesion():
+    JsonInput = None
     try:
-        inputBody = FromBody(request.get_json(), AuthRequestEntity)
+        JsonInput = request.get_json()
+        inputBody = FromBody(JsonInput, AuthRequestEntity)
         idUsuario:int = Authentication.IniciarSesion(inputBody.cUser,inputBody.cPassword)
 
         if idUsuario == 0:
@@ -46,9 +50,11 @@ def IniciarSesion():
             cToken=create_access_token(identity=str(idUsuario),expires_delta=timedelta(nExpire)),
             nExpireIn=nExpire
             )
+        
         return StatusCode(200,EasyResponse.EasySuccessRespond(newObjToken))
     
-    except Exception as ex:        
+    except Exception as ex:
+        Logger.error("authenticationController /login : %s, WITH INPUT %s", str(ex), str(JsonInput))
         return StatusCode(500,EasyResponse.EasyErrorRespond("99","Error general interno. " + str(ex)))
 
 #Para verificar
