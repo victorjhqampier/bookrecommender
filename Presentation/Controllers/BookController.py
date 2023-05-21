@@ -15,8 +15,8 @@ from Domain.Interfaces.IRecomInfrastructure import IRecomInfrastructure
 from Infrastructure.Neo4j.Programmabilities.BookProgramability import BookProgramability
 from flask_cors import CORS, cross_origin
 from flask_jwt_extended import jwt_required
-
 from Infrastructure.Neo4j.Programmabilities.RecomMethod import RecomMethod
+import logging
 
 #=======================================================================
 #   © Victor JCaxi - All rights reserved
@@ -28,6 +28,11 @@ from Infrastructure.Neo4j.Programmabilities.RecomMethod import RecomMethod
 #   Changes:
 #   By        Date       Aim
 #=======================================================================
+
+Logger = logging.getLogger(__name__)#WARNING, ERROR y CRITICAL
+console_handler = logging.StreamHandler()
+console_handler.setFormatter(logging.Formatter('[%(asctime)s] [%(levelname)s] %(message)s'))
+Logger.addHandler(console_handler)
 
 EasyResponse: IEasyResponse = EasyResponseCommon()
 Helper: IHelper = HelperCommon()
@@ -71,6 +76,7 @@ def SaveMergeBook():
         return StatusCode(200, EasyResponse.EasySuccessRespond(result))
 
     except Exception as e:
+        Logger.error("bookController /save-merge : [%s] WITH INPUT %s", str(e), str(request.get_json()))
         return StatusCode(500, EasyResponse.EasyErrorRespond("99", "Error general interno. " + str(e)))
 
 @bookController.route("/search", methods=["GET"])
@@ -92,6 +98,7 @@ def SearchBook():
         return StatusCode(200, EasyResponse.EasySuccessRespond(result))
 
     except Exception as e:
+        Logger.error("bookController /search : [%s] WITH INPUT %s", str(e), str(request.args["cKeyWord"]))
         return StatusCode(500, EasyResponse.EasyErrorRespond("99", "Error general interno. " + str(e)))
 
 @bookController.route("/trends", methods=["GET"])
@@ -105,6 +112,7 @@ def TrendsBook():
         return StatusCode(200, EasyResponse.EasySuccessRespond(result))
 
     except Exception as e:
+        Logger.error("bookController /trends : [%s] WITH INPUT %s", str(e), "None")
         return StatusCode(500, EasyResponse.EasyErrorRespond("99", "Error general interno. " + str(e)))
 
 @bookController.route("/show-book", methods=["POST"])
@@ -120,4 +128,5 @@ def GetBook():
         return StatusCode(200, EasyResponse.EasySuccessRespond(result))
 
     except Exception as e:
+        Logger.error("bookController /show-book : [%s] WITH INPUT %s", str(e), str(request.get_json()))
         return StatusCode(500, EasyResponse.EasyErrorRespond("99", "Error general interno. " + str(e)))

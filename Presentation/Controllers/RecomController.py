@@ -1,13 +1,17 @@
 from flask import Blueprint, request
 from Domain.Core.StatusCode import StatusCode, FromBody
-from Domain.Interfaces.IBook import IBook
 from Domain.Interfaces.IEasyResponse import IEasyResponse
 from Domain.Common.EasyResponseCommon import EasyResponseCommon
 from flask_cors import CORS, cross_origin
 from flask_jwt_extended import jwt_required
-
 from Domain.Interfaces.IRecomInfrastructure import IRecomInfrastructure
 from Infrastructure.Neo4j.Programmabilities.RecomMethod import RecomMethod
+import logging
+
+Logger = logging.getLogger(__name__)#WARNING, ERROR y CRITICAL
+console_handler = logging.StreamHandler()
+console_handler.setFormatter(logging.Formatter('[%(asctime)s] [%(levelname)s] %(message)s'))
+Logger.addHandler(console_handler)
 
 #=======================================================================
 #   © Victor JCaxi - All rights reserved
@@ -41,6 +45,7 @@ def JaccardIndexRecom():
         return StatusCode(200, EasyResponse.EasySuccessRespond(result))
 
     except Exception as e:
+        Logger.error("recomController /jaccard-index : [%s] WITH INPUT %s", str(e), str(request.get_json()))
         return StatusCode(500, EasyResponse.EasyErrorRespond("99", "Error general interno. " + str(e)))
 
 @recomController.route("/co-responsibility", methods=["POST"])
@@ -58,6 +63,7 @@ def CoResponsibilityRecom():
         return StatusCode(200, EasyResponse.EasySuccessRespond(result))
 
     except Exception as e:
+        Logger.error("recomController /co-responsibility : [%s] WITH INPUT %s", str(e), str(request.get_json()))
         return StatusCode(500, EasyResponse.EasyErrorRespond("99", "Error general interno. " + str(e)))
 
 @recomController.route("/classification", methods=["POST"])
@@ -75,4 +81,5 @@ def ClassificationRecom():
         return StatusCode(200, EasyResponse.EasySuccessRespond(result))
 
     except Exception as e:
+        Logger.error("recomController /classification : [%s] WITH INPUT %s", str(e), str(request.get_json()))
         return StatusCode(500, EasyResponse.EasyErrorRespond("99", "Error general interno. " + str(e)))

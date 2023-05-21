@@ -26,9 +26,13 @@ import logging
 #   By        Date       Aim
 #=======================================================================
 
+Logger = logging.getLogger(__name__)#WARNING, ERROR y CRITICAL
+console_handler = logging.StreamHandler()
+console_handler.setFormatter(logging.Formatter('[%(asctime)s] [%(levelname)s] %(message)s'))
+Logger.addHandler(console_handler)
+
 EasyResponse:IEasyResponse = EasyResponseCommon()
 Authentication:IAutenticacion = AutenticacionDatabase()
-Logger = logging.getLogger(__name__)
 
 authenticationController = Blueprint("authenticationController",__name__)
 CORS(authenticationController)
@@ -52,7 +56,7 @@ def IniciarSesion():
         return StatusCode(200,EasyResponse.EasySuccessRespond(newObjToken))
     
     except Exception as ex:
-        Logger.error("authenticationController /login : [ERROR][%s] WITH INPUT %s", str(ex), str(request.get_json()))
+        Logger.error("authenticationController /login : [%s] WITH INPUT %s", str(ex), str(request.get_json()))
         return StatusCode(500,EasyResponse.EasyErrorRespond("99","Error general interno. " + str(ex)))
 
 #Para verificar
