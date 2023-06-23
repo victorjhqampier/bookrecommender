@@ -81,6 +81,8 @@ class RecomMethod(IRecomInfrastructure):
             ).Node("Title","recom"
             ).Where(   
                 ).Id("m", idTitle).And("m <> recom"
+            ).WithDistinct(
+                ).Node("recom"
             ).Match(# View only         
                 ).Node("recom").LeftRelationship("HAS_RESPONSIBILITY","res").Node("per"
             ).With(

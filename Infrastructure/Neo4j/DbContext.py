@@ -179,6 +179,12 @@ class DbContext(IContext):
         self.arrQuery[self.nElement]+=f"WITH "
         return self
     
+    @dispatch()
+    def WithDistinct(self):
+        self.nElement +=1
+        self.arrQuery[self.nElement]+=f"WITH DISTINCT "
+        return self
+    
     @dispatch(str)
     def Node(self, cAlias:str):
         if(self.arrQuery[self.nElement].strip()[-1]=="-" or self.arrQuery[self.nElement].strip()[-1]==">" or  self.arrQuery[self.nElement].strip()[-2]=="C" or self.arrQuery[self.nElement].strip()[-2]==")"):

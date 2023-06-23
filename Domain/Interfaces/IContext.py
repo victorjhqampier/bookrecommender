@@ -89,8 +89,12 @@ class IContext(metaclass=ABCMeta):
     def And(self, cNode:str = ""):
         pass
 
-    @abstractmethod    
+    @abstractmethod  
     def With(self):
+        pass
+
+    @abstractmethod   
+    def WithDistinct(self):
         pass
 
     @abstractmethod
