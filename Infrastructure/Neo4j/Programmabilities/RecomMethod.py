@@ -61,7 +61,7 @@ class RecomMethod(IRecomInfrastructure):
                 ).And().SortObjectCollect("{cName:per.cName, cSurname:per.cSurname, cRole:res.cRole}","cRole").As("author"
             ).Select("ID(recom) as idTitle,recom.cTitle as cTitle,recom.cSubtitle as cSubtitle,recom.cTopics as cTopic,(recom.nReleased + ' '+recom.cEdition) as cRelease,recom.cImage as cImage,(author.cName+' '+author.cSurname) as cAuthor,author.cRole as cRole, recom.nViews as nViews"
             ).OrderByDescending("jaccard,recom.nViews"
-            ).Limit(10)
+            ).Limit(15)
         
         return BuildRecomByJaccard.ToList()
     
@@ -90,7 +90,7 @@ class RecomMethod(IRecomInfrastructure):
                 ).And().SortObjectCollect("{cName:per.cName, cSurname:per.cSurname, cRole:res.cRole}","cRole").As("author"
             ).Select("ID(recom) as idTitle,recom.cTitle as cTitle,recom.cSubtitle as cSubtitle,recom.cTopics as cTopic,(recom.nReleased + ' '+recom.cEdition) as cRelease,recom.cImage as cImage,(author.cName+' '+author.cSurname) as cAuthor,author.cRole as cRole, recom.nViews as nViews"
             ).OrderByDescending("recom.nViews"
-            ).Limit(10)
+            ).Limit(15)
         
         return BuildRecomByCoResponsibility.ToList()
     
@@ -115,7 +115,7 @@ class RecomMethod(IRecomInfrastructure):
                 ).And().SortObjectCollect("{cName:per.cName, cSurname:per.cSurname, cRole:res.cRole}","cRole").As("author"
             ).Select("ID(recom) as idTitle,recom.cTitle as cTitle,recom.cSubtitle as cSubtitle,recom.cTopics as cTopic,(recom.nReleased + ' '+recom.cEdition) as cRelease,recom.cImage as cImage,(author.cName+' '+author.cSurname) as cAuthor,author.cRole as cRole, recom.nViews as nViews"
             #).OrderByDescending("cl2.cCode,recom.nViews"
-            ).Limit(10)
+            ).Limit(15)
         
         return BuildRecomByClassification.ToList()
     
