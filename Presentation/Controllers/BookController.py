@@ -37,9 +37,6 @@ Logger.addHandler(console_handler)
 EasyResponse: IEasyResponse = EasyResponseCommon()
 Helper: IHelper = HelperCommon()
 
-BookHandler: IBook = BookProgramability() # No Global yet
-objRecom:IRecomInfrastructure = RecomMethod()
-
 bookController = Blueprint("bookController", __name__)
 CORS(bookController)
 
@@ -69,7 +66,9 @@ def SaveMergeBook():
         arrCopies: list = []
         for item in arrInput["copy"]:
             Input: CopyDataEntity = FromBody(item, CopyDataEntity)
-            arrCopies.append(Input)        
+            arrCopies.append(Input)
+
+        BookHandler: IBook = BookProgramability() # No Global yet   
         
         result = BookHandler.MergeBook(objItem, arrCopies, arrAuthors, arrPublisher, objclassification, objSerialTitle)
 
@@ -91,6 +90,8 @@ def SearchBook():
         if(len(cKeyWord) < 4):
             return StatusCode(200, EasyResponse.EasyEmptyRespond())
 
+        objRecom:IRecomInfrastructure = RecomMethod()
+
         result:list = objRecom.SearchBook(cKeyWord)
         if(len(result) == 0):
             return StatusCode(200, EasyResponse.EasyEmptyRespond())
@@ -105,6 +106,8 @@ def SearchBook():
 @jwt_required()
 def TrendsBook():
     try:
+        
+        objRecom:IRecomInfrastructure = RecomMethod()
         result:list = objRecom.GetTrends()
         if(len(result) == 0):
             return StatusCode(200, EasyResponse.EasyEmptyRespond())
@@ -121,6 +124,9 @@ def GetBook():
     try:
         idTitle:str = request.get_json()["idTitle"]
         
+        BookHandler: IBook = BookProgramability() # No Global yet
+        objRecom:IRecomInfrastructure = RecomMethod()
+
         result = BookHandler.GetBook(int(idTitle))
         # if(len(result) == 0):
         #     return StatusCode(200, EasyResponse.EasyEmptyRespond())
