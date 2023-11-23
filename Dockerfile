@@ -6,5 +6,5 @@ COPY . .
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-CMD ["gunicorn", "-w", "2", "-b", "0.0.0.0:5000", "--reload", "app:app"]
+CMD ["gunicorn", "-w", "2", "-b", "0.0.0.0", "--reload", "app:app"]
 #CMD [ "python", "-m" , "flask", "run", "--host=0.0.0.0", "--workers=2"]
